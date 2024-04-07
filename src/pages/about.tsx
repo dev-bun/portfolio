@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from 'framer-motion'
 import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
 import { HSCarousel } from "preline";
+import { FaBrazilianRealSign, FaDiscord, FaGithub, FaInstagram, FaSpotify, FaTiktok, FaXTwitter, FaYoutube } from 'react-icons/fa6'
 type Props = {
     // Add custom props here
 }
@@ -32,9 +33,9 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
         <div className="grid grid-cols-1 content-center md:grid-cols-2 gap-2 p-5 h-screen w-full">
             <div className="flex flex-col bg-blue-900 text-slate-100 p-3 rounded-xl" id="whoiam">
               <p className="text-2xl font-black">{t("title")}</p>
-              <p className="ml-2">{t("description", {age: 15})}</p>
+              <p className="ml-1">{t("description", {age: 15})}</p>
             </div>
-            <div onClick={() => window.open(data?.listening_to_spotify?`https://open.spotify.com/track/${data.spotify?.track_id}?ref=igor.is-a.dev`:"https://open.spotify.com/playlist/2BbTZ0WHEf7nkq5kH9WmXU")} className="hover:scale-[0.95] scale-1 transition-all hover:bg-[#1DB954]/50 col-span-1 flex flex-col bg-[#1DB954] text-slate-200 p-3 rounded-xl overflow-hidden text-ellipsis whitespace-nowrap">
+            <div onClick={() => window.open(data?.listening_to_spotify?`https://open.spotify.com/track/${data.spotify?.track_id}?ref=igor.is-a.dev`:"https://open.spotify.com/playlist/2BbTZ0WHEf7nkq5kH9WmXU")} className="select-none hover:scale-[0.95] scale-1 transition-all hover:bg-[#1DB954]/50 col-span-1 flex flex-col bg-[#1DB954] text-slate-200 p-3 rounded-xl overflow-hidden text-ellipsis whitespace-nowrap">
               <div className="py-2"><Image width="100" height="100" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"}/></div>
               {data?.listening_to_spotify?(<div className="mt-1 pb-2 flex">
                 <div key={data.spotify?.album}>
@@ -49,7 +50,7 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
                 </div>
                 <div className="w-full flex flex-col px-2 justify-center truncate">
                   <p className="w-full text-xl font-black">{data?.spotify?.song}</p>
-                  <p className="w-full text-md font-medium">{data?.spotify?.artist}</p>
+                  <p className="w-full font-medium">{data?.spotify?.artist}</p>
                   {/*<progress value={ct} max={duration} className="[&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:bg-green-700 [&::-moz-progress-bar]:bg-green-700"></progress>*/}
                 </div>
               </div>):(<div className="mt-1 pb-2 flex">
@@ -58,12 +59,22 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
                 </div>
                 <div className="w-full flex flex-col p-2 justify-center">
                   <p className="w-full text-xl font-black">Metal, Caralho</p>
-                  <p className="w-full text-md font-medium">igorwastaken; Alice Dalsasso</p>
+                  <p className="w-full font-medium">igorwastaken; Alice Dalsasso</p>
                 </div>
               </div>)}
             </div>
-            <div className="p-2 flex flex-col rounded-xl">
-              
+            <div className="text-xl p-2 flex gap-2 rounded-xl bg-slate-800 justify-center items-center">
+              <button className="scale-2" onClick={() => window.open("https://discord.com/users/407859300527243275")}><FaDiscord/></button>
+              <button className="scale-2" onClick={() => window.open("https://x.com/notigorwastaken")}><FaXTwitter/></button>
+              <button className="scale-2" onClick={() => window.open("https://youtube.com/@igorwastaken")}><FaYoutube/></button>
+              <button className="scale-2" onClick={() => window.open("https://github.com/igorwastaken")}><FaGithub/></button>
+              <button className="scale-2" onClick={() => window.open("https://instagram.com/a.igor.fig")}><FaInstagram/></button>
+              <button className="scale-2" onClick={() => window.open("https://open.spotify.com/user/z9q572lf0ytsndqyzb0m4giwj")}><FaSpotify/></button>
+              <button className="scale-2" onClick={() => window.open("tiktok.com/@notigorwastaken")}><FaTiktok/></button>
+            </div>
+            <div className="p-2 rounded-xl bg-blue-700">
+              <p className="text-xl font-black">Projetos</p>
+
             </div>
         </div>
         </>
