@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@preline/carousel": "^2.1.0",
     "framer-motion": "^11.0.25",
     "i18next": "^23.10.1",
     "next": "14.1.4",

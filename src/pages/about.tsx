@@ -5,9 +5,9 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
 import { useLanyardWS, type Data } from 'use-lanyard';
 import { useEffect, useState } from "react";
-import { start } from "repl";
 import { AnimatePresence, motion } from 'framer-motion'
 import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
+import { HSCarousel } from "preline";
 type Props = {
     // Add custom props here
 }
@@ -29,12 +29,12 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
     const {t, i18n} = useTranslation(['about'])
     return (
         <>
-        <div className="grid grid-cols-1 justify-center md:grid-cols-2 gap-4 p-5">
+        <div className="grid grid-cols-1 content-center md:grid-cols-2 gap-2 p-5 h-screen w-full">
             <div className="flex flex-col bg-blue-900 text-slate-100 p-3 rounded-xl" id="whoiam">
               <p className="text-2xl font-black">{t("title")}</p>
               <p className="ml-2">{t("description", {age: 15})}</p>
             </div>
-            <div onClick={() => window.open("https://open.spotify.com/playlist/2BbTZ0WHEf7nkq5kH9WmXU")} className="hover:scale-[0.95] scale-1 transition-all hover:bg-[#1DB954]/50 col-span-1 flex flex-col bg-[#1DB954] text-slate-200 p-3 rounded-xl overflow-hidden text-ellipsis whitespace-nowrap">
+            <div onClick={() => window.open(data?.listening_to_spotify?`https://open.spotify.com/track/${data.spotify?.track_id}?ref=igor.is-a.dev`:"https://open.spotify.com/playlist/2BbTZ0WHEf7nkq5kH9WmXU")} className="hover:scale-[0.95] scale-1 transition-all hover:bg-[#1DB954]/50 col-span-1 flex flex-col bg-[#1DB954] text-slate-200 p-3 rounded-xl overflow-hidden text-ellipsis whitespace-nowrap">
               <div className="py-2"><Image width="100" height="100" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"}/></div>
               {data?.listening_to_spotify?(<div className="mt-1 pb-2 flex">
                 <div key={data.spotify?.album}>
@@ -56,11 +56,14 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
                 <div>
                   <Image alt="Metal, Caralho" src={"https://image-cdn-ak.spotifycdn.com/image/ab67706c0000da84b03a54b93b69f64684b8718e"} height="100" width="100"/>
                 </div>
-                <div className="w-full flex flex-col px-2 justify-center">
+                <div className="w-full flex flex-col p-2 justify-center">
                   <p className="w-full text-xl font-black">Metal, Caralho</p>
                   <p className="w-full text-md font-medium">igorwastaken; Alice Dalsasso</p>
                 </div>
               </div>)}
+            </div>
+            <div className="p-2 flex flex-col rounded-xl">
+              
             </div>
         </div>
         </>
