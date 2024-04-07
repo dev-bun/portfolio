@@ -26,6 +26,7 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
       setDuration(end - start);
       console.log(start, ct, end)
       setCT(Date.now())
+      console.log("I love Alice ❤️")
     }, [data])
     const {t, i18n} = useTranslation(['about'])
     return (
