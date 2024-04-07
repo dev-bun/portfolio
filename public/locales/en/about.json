@@ -1,5 +1,6 @@
 {
     "title": "About me",
     "description": "I'm Igor, I'm {{age}} old, I work with programming and some other things.\nI currently live in the State of São Paulo, in a small city.",
-    "listen": "Listen"
+    "listen": "Listen",
+    "projects": "Projects"
 }

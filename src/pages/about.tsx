@@ -63,18 +63,29 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
                 </div>
               </div>)}
             </div>
-            <div className="text-xl p-2 flex gap-2 rounded-xl bg-slate-800 justify-center items-center">
-              <button className="scale-2" onClick={() => window.open("https://discord.com/users/407859300527243275")}><FaDiscord/></button>
-              <button className="scale-2" onClick={() => window.open("https://x.com/notigorwastaken")}><FaXTwitter/></button>
-              <button className="scale-2" onClick={() => window.open("https://youtube.com/@igorwastaken")}><FaYoutube/></button>
-              <button className="scale-2" onClick={() => window.open("https://github.com/igorwastaken")}><FaGithub/></button>
-              <button className="scale-2" onClick={() => window.open("https://instagram.com/a.igor.fig")}><FaInstagram/></button>
-              <button className="scale-2" onClick={() => window.open("https://open.spotify.com/user/z9q572lf0ytsndqyzb0m4giwj")}><FaSpotify/></button>
-              <button className="scale-2" onClick={() => window.open("tiktok.com/@notigorwastaken")}><FaTiktok/></button>
+            <div className="text-2xl p-2 flex gap-2 rounded-xl bg-slate-800 self-start justify-center items-center">
+              <button onClick={() => window.open("https://discord.com/users/407859300527243275")}><FaDiscord/></button>
+              <button onClick={() => window.open("https://x.com/notigorwastaken")}><FaXTwitter/></button>
+              <button onClick={() => window.open("https://youtube.com/@igorwastaken")}><FaYoutube/></button>
+              <button onClick={() => window.open("https://github.com/igorwastaken")}><FaGithub/></button>
+              <button onClick={() => window.open("https://instagram.com/a.igor.fig")}><FaInstagram/></button>
+              <button onClick={() => window.open("https://open.spotify.com/user/z9q572lf0ytsndqyzb0m4giwj")}><FaSpotify/></button>
+              <button onClick={() => window.open("tiktok.com/@notigorwastaken")}><FaTiktok/></button>
             </div>
-            <div className="p-2 rounded-xl bg-blue-700">
-              <p className="text-xl font-black">Projetos</p>
-
+            <div className="relative p-2 rounded-xl">
+              <p className="[text-shadow:_0_4px_8px_rgb(0_0_0_/_40%)] absolute w-full p-3 text-xl font-black">{t("projects")}</p>
+              <div className="w-full h-full carousel rounded-box">
+                {/*<p className="absolute w-full p-3 text-xl font-black drop-shadow-xl">{t("projects")}</p>*/}
+                <div onClick={() => window.open("https://igor.mom/")} className="carousel-item w-full h-full">
+                  <Image className="w-full h-full" src={"/wtfl.png"} alt={"What The Floosh Game"} height={"356"} width={"356"}/>
+                </div>
+                <div onClick={() => alert("Projeto indisponível.")} className="carousel-item w-full h-full">
+                  <Image className="w-full h-full" src={"/dogla.gif"} alt={"Server do Dogla"} height={"356"} width={"356"}/>
+                </div>
+                <div onClick={() => window.open("https://bruteone.com")} className="carousel-item w-full h-full">
+                  <Image className="w-full h-full" src={"/bruteone.png"} alt={"BruteOne"} height="356" width="356"/>
+                </div>
+              </div>
             </div>
         </div>
         </>

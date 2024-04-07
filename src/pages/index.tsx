@@ -23,7 +23,7 @@ const home = function Home(_props: InferGetStaticPropsType<typeof getStaticProps
       </div>
       <div className="md:p-5 w-full flex flex-col md:flex-row justify-evenly items-center text-center">
         <button className="mt-1 text-center bg-blue-700 text-blue-200 p-3 rounded-xl" onClick={() => router.push("/about")}>{t("about")}</button>
-        <button className="mt-3 text-center bg-green-700 text-green-200 p-3 rounded-xl" >Spotify</button>
+        {/*<button className="mt-3 text-center bg-green-700 text-green-200 p-3 rounded-xl" >Spotify</button>*/}
       </div>
       <div className="p-4 text-center">
         <p className="text-md">{t("notmuch")}</p>
