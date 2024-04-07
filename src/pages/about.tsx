@@ -73,7 +73,7 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
               <button onClick={() => window.open("https://open.spotify.com/user/z9q572lf0ytsndqyzb0m4giwj")}><FaSpotify/></button>
               <button onClick={() => window.open("tiktok.com/@notigorwastaken")}><FaTiktok/></button>
             </div>
-            <div className="relative p-2 rounded-xl">
+            <div className="relative rounded-xl">
               <p className="[text-shadow:_0_4px_8px_rgb(0_0_0_/_40%)] absolute w-full p-3 text-xl font-black">{t("projects")}</p>
               <div className="w-full h-full carousel rounded-box">
                 {/*<p className="absolute w-full p-3 text-xl font-black drop-shadow-xl">{t("projects")}</p>*/}
