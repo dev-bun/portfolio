@@ -13,7 +13,7 @@ const nextConfig = {
         pathname: "/images/*"
       }
     ]*/
-    domains: ["i.scdn.co"]
+    domains: ["i.scdn.co", "image-cdn-ak.spotifycdn.com"]
   }
 };
 

@@ -7,6 +7,7 @@ import { useLanyardWS, type Data } from 'use-lanyard';
 import { useEffect, useState } from "react";
 import { start } from "repl";
 import { AnimatePresence, motion } from 'framer-motion'
+import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
 type Props = {
     // Add custom props here
 }
@@ -33,25 +34,33 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
               <p className="text-2xl font-black">{t("title")}</p>
               <p className="ml-2">{t("description", {age: 15})}</p>
             </div>
-            <div className="col-span-1 flex flex-col bg-[#1DB954] text-slate-200 p-3 rounded-xl overflow-hidden text-ellipsis whitespace-nowrap">
+            <div onClick={() => window.open("https://open.spotify.com/playlist/2BbTZ0WHEf7nkq5kH9WmXU")} className="hover:scale-[0.95] scale-1 transition-all hover:bg-[#1DB954]/50 col-span-1 flex flex-col bg-[#1DB954] text-slate-200 p-3 rounded-xl overflow-hidden text-ellipsis whitespace-nowrap">
               <div className="py-2"><Image width="100" height="100" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"}/></div>
               {data?.listening_to_spotify?(<div className="mt-1 pb-2 flex">
-                <AnimatePresence>
-                  <div className="" key={data?.spotify?.album}>
+                <div key={data.spotify?.album}>
+                  <AnimatePresence>
                     <motion.div
                        initial={{ opacity: 0 }}
                        animate={{ opacity: 1 }}
                        exit={{ opacity: 0 }}>
-                      <Image placeholder="blur" blurDataURL="/loading.png" className="rounded" width="100" height="100" alt="Song Cover" src={!data?.spotify?.album_art_url?"/loading.png":data?.spotify?.album_art_url}/>
+                      <Image placeholder="blur" blurDataURL={"/loading.png"} className="rounded" width="100" height="100" alt="Song Cover" src={!data?.spotify?.album_art_url?"/loading.png":data?.spotify?.album_art_url}/>
                     </motion.div>
-                  </div>
-                </AnimatePresence>
+                  </AnimatePresence>
+                </div>
                 <div className="w-full flex flex-col px-2 justify-center truncate">
                   <p className="w-full text-xl font-black">{data?.spotify?.song}</p>
                   <p className="w-full text-md font-medium">{data?.spotify?.artist}</p>
                   {/*<progress value={ct} max={duration} className="[&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:bg-green-700 [&::-moz-progress-bar]:bg-green-700"></progress>*/}
                 </div>
-              </div>):(<div className="mt-1 pb-2 flex"></div>)}
+              </div>):(<div className="mt-1 pb-2 flex">
+                <div>
+                  <Image alt="Metal, Caralho" src={"https://image-cdn-ak.spotifycdn.com/image/ab67706c0000da84b03a54b93b69f64684b8718e"} height="100" width="100"/>
+                </div>
+                <div className="w-full flex flex-col px-2 justify-center">
+                  <p className="w-full text-xl font-black">Metal, Caralho</p>
+                  <p className="w-full text-md font-medium">igorwastaken; Alice Dalsasso</p>
+                </div>
+              </div>)}
             </div>
         </div>
         </>
