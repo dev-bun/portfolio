@@ -6,4 +6,4 @@ const app = function App({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;
 }
 
-appWithTranslation(app)
+export default appWithTranslation(app)

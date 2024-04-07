@@ -1,6 +1,11 @@
 import Image from "next/image";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { GetStaticProps } from "next";
+
+type Props = {
+    // Add custom props here
+}
 
 const home = function Home() {
   const { t, i18n } = useTranslation("common")
@@ -21,14 +26,14 @@ const home = function Home() {
   );
 }
 
-export async function getStaticProps({ locale }: any) {
-  return {
+export const getStaticProps: GetStaticProps<Props> = async ({
+    locale,
+  }) => ({
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common'
+      ...(await serverSideTranslations(locale ?? 'pt-br', [
+        'common',
       ])),
     },
-  }
-}
+})
 
 export default home;
