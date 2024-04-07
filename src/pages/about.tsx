@@ -17,7 +17,7 @@ const DISCORD_ID = "407859300527243275"
 const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) {
     const data = useLanyardWS(DISCORD_ID);
 
-    var [ct, setCT]= useState(0);
+    var [ ct, setCT ]= useState(0);
     var [ duration, setDuration ]= useState(0);
     useEffect(() => {
       const start = Number(data?.spotify?.timestamps.start)
