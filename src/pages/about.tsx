@@ -64,7 +64,7 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
                 </div>
               </div>)}
             </div>
-            <div className="text-2xl p-2 flex gap-2 rounded-xl bg-slate-800 self-start justify-center items-center">
+            <div className="text-2xl lg:text-4xl p-2 flex gap-2 rounded-xl bg-slate-800 self-start justify-center items-center">
               <button onClick={() => window.open("https://discord.com/users/407859300527243275")}><FaDiscord/></button>
               <button onClick={() => window.open("https://x.com/notigorwastaken")}><FaXTwitter/></button>
               <button onClick={() => window.open("https://youtube.com/@igorwastaken")}><FaYoutube/></button>
