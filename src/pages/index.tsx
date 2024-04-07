@@ -1,14 +1,17 @@
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { GetStaticProps } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { useRouter } from "next/router";
 
 type Props = {
     // Add custom props here
 }
 
-const home = function Home() {
-  const { t, i18n } = useTranslation("common")
+const home = function Home(_props: InferGetStaticPropsType<typeof getStaticProps>) {
+  const router = useRouter();
+  const { t, i18n } = useTranslation(["common"])
+
   return (
     <div className="flex flex-col justify-center items-center w-full h-screen">
       <div className="text-center md:text-left flex flex-col md:flex-row justify-center items-center w-full">
@@ -30,7 +33,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({
     locale,
   }) => ({
     props: {
-      ...(await serverSideTranslations(locale ?? 'pt-br', [
+      ...(await serverSideTranslations(locale ?? 'pt', [
         'common',
       ])),
     },
