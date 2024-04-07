@@ -31,7 +31,7 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
     const {t, i18n} = useTranslation(['about'])
     return (
         <>
-        <div className="grid grid-cols-1 content-center md:grid-cols-2 gap-2 p-5 h-screen w-full">
+        <div className="grid grid-cols-1 content-center md:grid-cols-2 gap-2 p-5 w-full">
             <div className="flex flex-col bg-blue-900 text-slate-100 p-3 rounded-xl" id="whoiam">
               <p className="text-2xl font-black">{t("title")}</p>
               <p className="ml-1">{t("description", {age: 15})}</p>
