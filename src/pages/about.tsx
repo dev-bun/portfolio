@@ -31,8 +31,8 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
         // if(duration && calcDuration !== duration) clearInterval(interv);
         setDuration(calcDuration)
         setCT(Math.floor((Date.now() - start.getTime()) / 1000).toFixed());
-        setDurationM(`${new Date((end.getTime()-start.getTime())).getMinutes()}:${new Date((end.getTime()-start.getTime())).getSeconds()}`)
-        setCurrent(`${new Date((Date.now() - start.getTime())).getMinutes()}:${new Date((Date.now() - start.getTime())).getSeconds()}`)
+        setDurationM(`${("0"+new Date((end.getTime()-start.getTime())).getMinutes()).slice(-2)}:${("0" + new Date((end.getTime()-start.getTime())).getSeconds()).slice(-2)}`)
+        setCurrent(`${("0"+new Date((Date.now() - start.getTime())).getMinutes()).slice(-2)}:${("0"+new Date((Date.now() - start.getTime())).getSeconds()).slice(-2)}`)
       }, 1000)
       return () => clearInterval(inter)
     }, [data])
