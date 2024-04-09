@@ -20,7 +20,8 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
     const data = useLanyardWS(DISCORD_ID);
     var [ ct, setCT ]= useState<any>(0);
     var [ duration, setDuration ]= useState<any>(0);
-    var [ current, setCurrent ] = useState<any>(0);
+    var [ current, setCurrent ] = useState<any>("00:00");
+    var [ durationM, setDurationM ] = useState<any>("00:00")
     useEffect(() => {
       console.log("I love Alice ❤️")
       const inter = setInterval(() => {
@@ -30,6 +31,8 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
         // if(duration && calcDuration !== duration) clearInterval(interv);
         setDuration(calcDuration)
         setCT(Math.floor((Date.now() - start.getTime()) / 1000).toFixed());
+        setDurationM(`${new Date((end.getTime()-start.getTime())).getMinutes()}:${new Date((end.getTime()-start.getTime())).getSeconds()}`)
+        setCurrent(`${new Date((Date.now() - start.getTime())).getMinutes()}:${new Date((Date.now() - start.getTime())).getSeconds()}`)
       }, 1000)
       return () => clearInterval(inter)
     }, [data])
@@ -60,7 +63,8 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
                 <div className="w-full flex flex-col px-2 justify-center truncate">
                   <p className="w-full text-xl font-black">{data?.spotify?.song}</p>
                   <p className="w-full font-medium">{data?.spotify?.artist}</p>
-                  <progress value={ct} max={duration} className="[&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:bg-green-700 [&::-moz-progress-bar]:bg-green-700"></progress>
+                  <progress value={ct} max={duration} className="w-full [&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:bg-green-700 [&::-moz-progress-bar]:bg-green-700"></progress>
+                  <div className="flex justify-between"><p>{current}</p><p>{durationM}</p></div>
                 </div>
               </div>):(<div className="mt-1 pb-2 flex">
                 <div>
