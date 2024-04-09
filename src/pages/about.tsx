@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
 import { HSCarousel } from "preline";
 import { FaBrazilianRealSign, FaDiscord, FaGithub, FaInstagram, FaSpotify, FaTiktok, FaXTwitter, FaYoutube } from 'react-icons/fa6'
+import { setDefaultAutoSelectFamily } from "net";
 type Props = {
     // Add custom props here
 }
@@ -17,17 +18,24 @@ const DISCORD_ID = "407859300527243275"
 
 const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) {
     const data = useLanyardWS(DISCORD_ID);
-
-    var [ ct, setCT ]= useState(0);
-    var [ duration, setDuration ]= useState(0);
+    var [ ct, setCT ]= useState<any>(0);
+    var [ duration, setDuration ]= useState<any>(0);
+    var [ current, setCurrent ] = useState<any>(0);
     useEffect(() => {
-      const start = Number(data?.spotify?.timestamps.start)
-      const end = Number(data?.spotify?.timestamps.end)
-      setDuration(end - start);
-      console.log(start, ct, end)
-      setCT(Date.now())
       console.log("I love Alice ❤️")
+      const inter = setInterval(() => {
+        const start = new Date(Number(data?.spotify?.timestamps.start))
+        const end = new Date(Number(data?.spotify?.timestamps.end))
+        const calcDuration = Math.floor((end.getTime() - start.getTime()) / 1000).toFixed();
+        // if(duration && calcDuration !== duration) clearInterval(interv);
+        setDuration(calcDuration)
+        setCT(Math.floor((Date.now() - start.getTime()) / 1000).toFixed());
+      }, 1000)
+      return () => clearInterval(inter)
     }, [data])
+   /* useEffect(() => {
+      if(oldData !== data) return clearInterval(inter)
+    }, [data])*/
     const {t, i18n} = useTranslation(['about'])
     return (
         <>
@@ -52,7 +60,7 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
                 <div className="w-full flex flex-col px-2 justify-center truncate">
                   <p className="w-full text-xl font-black">{data?.spotify?.song}</p>
                   <p className="w-full font-medium">{data?.spotify?.artist}</p>
-                  {/*<progress value={ct} max={duration} className="[&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:bg-green-700 [&::-moz-progress-bar]:bg-green-700"></progress>*/}
+                  <progress value={ct} max={duration} className="[&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:bg-green-700 [&::-moz-progress-bar]:bg-green-700"></progress>
                 </div>
               </div>):(<div className="mt-1 pb-2 flex">
                 <div>
