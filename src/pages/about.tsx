@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from 'framer-motion'
 import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
 import { HSCarousel } from "preline";
-import { FaBrazilianRealSign, FaDiscord, FaGithub, FaInstagram, FaSpotify, FaTiktok, FaXTwitter, FaYoutube } from 'react-icons/fa6'
+import { FaBrazilianRealSign, FaDiscord, FaGithub, FaInstagram, FaSpotify, FaTiktok, FaXTwitter, FaYoutube, FaJs, FaNodeJs, FaHtml5, FaReact, FaCss3 } from 'react-icons/fa6'
+import { SiKotlin, SiTypescript, SiJavascript, SiNextdotjs, SiReact, SiHtml5, SiCsharp, SiCss3, SiNpm, SiTailwindcss } from "react-icons/si";
 import { setDefaultAutoSelectFamily } from "net";
 type Props = {
     // Add custom props here
@@ -87,6 +88,18 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
               <button onClick={() => window.open("https://instagram.com/a.igor.fig")}><FaInstagram/></button>
               <button onClick={() => window.open("https://open.spotify.com/user/z9q572lf0ytsndqyzb0m4giwj")}><FaSpotify/></button>
               <button onClick={() => window.open("tiktok.com/@notigorwastaken")}><FaTiktok/></button>
+            </div>
+            <div className="text-2xl lg:text-4xl p-1 flex gap-2 rounded-xl bg-slate-800 self-start justify-center items-center">
+              <p className="tooltip" data-tip="100%">🇵🇹</p>
+              <p className="tooltip" data-tip="100%"><SiJavascript/></p>
+              <p className="tooltip" data-tip="100%"><SiTypescript/></p>
+              <p className="tooltip" data-tip="100%"><SiHtml5/></p>
+              <p className="tooltip" data-tip="100%"><SiTailwindcss/></p>
+              <p className="tooltip" data-tip="90%"><SiReact/></p>
+              <p className="tooltip" data-tip="90%"><SiNextdotjs/></p>
+              <p className="tooltip" data-tip="30%"><SiKotlin/></p>
+              <p className="tooltip" data-tip="5%"><SiCsharp/></p>
+              <p className="tooltip" data-tip="1%">🇬🇧</p>
             </div>
             <div className="relative rounded-xl">
               <p className="[text-shadow:_0_4px_8px_rgb(0_0_0_/_40%)] absolute w-full p-3 text-xl font-black">{t("projects")}</p>
