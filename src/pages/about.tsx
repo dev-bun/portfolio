@@ -56,7 +56,10 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
                        initial={{ opacity: 0 }}
                        animate={{ opacity: 1 }}
                        exit={{ opacity: 0 }}>
-                      <Image placeholder="blur" blurDataURL={"/loading.png"} className="rounded" width="100" height="100" alt="Song Cover" src={!data?.spotify?.album_art_url?"/loading.png":data?.spotify?.album_art_url}/>
+                        <div>
+                         <Image placeholder="blur" blurDataURL={"/loading.png"} className="rounded" width="100" height="100" alt="Song Cover" src={!data?.spotify?.album_art_url?"/loading.png":data?.spotify?.album_art_url}/>
+                         {/*<Image placeholder="blur" blurDataURL={"/loading.png"} className="absolute rounded" width="100" height="100" alt="Song Cover" src={!data?.spotify?.album_art_url?"/loading.png":data?.spotify?.album_art_url}/>*/}
+                        </div>
                     </motion.div>
                   </AnimatePresence>
                 </div>
@@ -64,7 +67,7 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
                   <p className="w-full text-xl font-black">{data?.spotify?.song}</p>
                   <p className="w-full font-medium">{data?.spotify?.artist}</p>
                   <progress value={ct} max={duration} className="w-full [&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:bg-green-700 [&::-moz-progress-bar]:bg-green-700"></progress>
-                  <div className="flex justify-between"><p>{current}</p><p>{durationM}</p></div>
+                  <div className="flex justify-between"><p className="font-bold">{current}</p><p className="font-bold">{durationM}</p></div>
                 </div>
               </div>):(<div className="mt-1 pb-2 flex">
                 <div>
