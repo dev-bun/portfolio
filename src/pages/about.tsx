@@ -67,7 +67,7 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
                 <div className="w-full flex flex-col px-2 justify-center truncate">
                   <p className="w-full text-xl font-black">{data?.spotify?.song}</p>
                   <p className="w-full font-medium">{data?.spotify?.artist}</p>
-                  <progress value={ct} max={duration} className="w-full [&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:bg-green-700 [&::-moz-progress-bar]:bg-green-700"></progress>
+                  <progress value={ct} max={duration} className="w-full [&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:transition-all [&::-webkit-progress-value]:duration-500 [&::-webkit-progress-value]:bg-green-700 [&::-moz-progress-bar]:transition-all [&::-moz-progress-bar]:duration-500 [&::-moz-progress-bar]:bg-green-700"></progress>
                   <div className="flex justify-between"><p className="font-bold">{current}</p><p className="font-bold">{durationM}</p></div>
                 </div>
               </div>):(<div className="mt-1 pb-2 flex">
@@ -113,6 +113,27 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
                 </div>
                 <div onClick={() => window.open("https://bruteone.com")} className="carousel-item w-full h-full">
                   <Image className="w-full h-full" src={"/bruteone.png"} alt={"BruteOne"} height="356" width="356"/>
+                </div>
+              </div>
+            </div>
+            <div className="select-none transition-all col-span-1 flex flex-col bg-[#5865F2] text-slate-200 p-3 rounded-xl overflow-hidden text-ellipsis whitespace-nowrap">
+              <div className="py-2"><Image width="110" height="110" alt="Discord Logo" src={"https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0b544a3e3c7c05753bcd_full_logo_white_RGB.png"}/></div>
+              <div className="flex gap-2">
+                <div className="justify-center items-center relative">
+                  <Image className="z-[10] scale-[1.2] absolute w-24" width="100" height="100" alt="De" src={`https://cdn.discordapp.com/avatar-decoration-presets/${data?.discord_user.avatar_decoration_data?.asset}?size=4096`}/>
+                  <div className="scale-[1]">
+                    <Image className="w-24 rounded-full" width="100" height="100" alt="Me" src={`https://cdn.discordapp.com/avatars/${data?.discord_user.id}/${data?.discord_user.avatar}?size=4096`}/>
+                  </div>
+                </div>
+                <div className="h-full flex flex-col justify-center hover:cursor-pointer">
+                  <span className="flex">
+                    <p className="text-xl font-black">{data?.discord_user.username}</p>
+                    {/*<span className="flex justify-start">
+                      <Image src="https://raw.githubusercontent.com/mezotv/discord-badges/main/assets/hypesquadbravery.svg" height="20" width="20" alt="Hypesquad Bravery"/>
+                      <Image src="https://raw.githubusercontent.com/mezotv/discord-badges/main/assets/username.png" height="18" width="22" alt="Known as Igor#6159"/>
+    </span>*/}
+                  </span>
+                  <p className="opacity-[0.8]">{data?.activities[0].type===4?data.activities[0].state:""}</p>
                 </div>
               </div>
             </div>
