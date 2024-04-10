@@ -98,7 +98,7 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
               <p className="tooltip" data-tip="90%"><SiReact/></p>
               <p className="tooltip" data-tip="90%"><SiNextdotjs/></p>
               <p className="tooltip" data-tip="30%"><SiKotlin/></p>
-              <p className="tooltip" data-tip="5%"><SiCsharp/></p>
+              {/*<p className="tooltip" data-tip="5%"><SiCsharp/></p>*/}
               <p className="tooltip" data-tip="1%">🇬🇧</p>
             </div>
             <div className="relative rounded-xl">
