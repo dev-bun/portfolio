@@ -133,7 +133,7 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
                       <Image src="https://raw.githubusercontent.com/mezotv/discord-badges/main/assets/username.png" height="18" width="22" alt="Known as Igor#6159"/>
     </span>*/}
                   </span>
-                  <p className="opacity-[0.8]">{data?.activities[0].type===4?data.activities[0].state:""}</p>
+                  <p className="opacity-[0.8]">{data?.activities[0] && data?.activities[0].type===4?data.activities[0].state:""}</p>
                 </div>
               </div>
             </div>
