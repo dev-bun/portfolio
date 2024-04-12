@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
-import querystring from 'querystring';
+//import querystring from 'querystring';
+import { URLSearchParams } from 'url';
 export const runtime = "edge";
 const {
   SPOTIFY_CLIENT_ID: client_id,
@@ -14,16 +15,21 @@ const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
 const QUEUE_ENDPOINT = `https://api.spotify.com/v1/me/player/queue`
 
 const getAccessToken = async () => {
+  const params = new URLSearchParams({
+    grant_type: 'refresh_token',
+    refresh_token: refresh_token as string
+  })
   const response = await fetch(TOKEN_ENDPOINT, {
     method: 'POST',
     headers: {
       Authorization: `Basic ${basic}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: querystring.stringify({
+    body: params,
+    /* new URLSearchParams({
       grant_type: 'refresh_token',
       refresh_token,
-    }),
+    }),*/
   });
 
   return response.json();
