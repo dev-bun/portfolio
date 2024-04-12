@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
 //import querystring from 'querystring';
-import { URLSearchParams } from 'url';
 export const runtime = "edge";
 const {
   SPOTIFY_CLIENT_ID: client_id,
@@ -14,11 +13,31 @@ const NOW_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player/currently-pla
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
 const QUEUE_ENDPOINT = `https://api.spotify.com/v1/me/player/queue`
 
+export type Queue = {
+  title?: string;
+  artist?: string;
+  album?: string;
+  albumImageUrl?: string;
+}
+
+export type SongInfo = {
+  title?: string;
+  artist?: string;
+  isPlaying?: boolean;
+  album?: string;
+  albumImageUrl?: string;
+  duration?: number;
+  songUrl?: string;
+  progress?: number;
+  queue?: Queue;
+}
+
 const getAccessToken = async () => {
   const params = new URLSearchParams({
-    grant_type: 'refresh_token',
-    refresh_token: refresh_token as string
-  })
+    'grant_type': 'refresh_token',
+    'refresh_token': refresh_token as string
+  }).toString();
+
   const response = await fetch(TOKEN_ENDPOINT, {
     method: 'POST',
     headers: {
@@ -53,7 +72,7 @@ export const getQueue = async () => {
   })
 }
 
-export default async (_: NextApiRequest, res: NextApiResponse) => {
+export default async function GET(req: NextApiRequest, res: NextApiResponse<SongInfo>) {
   const response = await getNowPlaying();
   const que = await getQueue();
   if (response.status === 204 || response.status > 400) {
@@ -82,7 +101,7 @@ export default async (_: NextApiRequest, res: NextApiResponse) => {
   const duration = song.item.duration_ms;
   const progress = song.progress_ms
 
-  return res.status(200).json({
+  return NextResponse.json({
     album,
     albumImageUrl,
     artist,
@@ -92,5 +111,5 @@ export default async (_: NextApiRequest, res: NextApiResponse) => {
     duration,
     progress,
     queue: item
-  });
+  }, { status: 200 });
 };
