@@ -1,6 +1,5 @@
 import Layout from "@/components/Layout";
 import { AnimatePresence, motion } from "framer-motion";
-import { Html } from "next/document";
 import Image from "next/image";
 import prettyMilliseconds from "pretty-ms";
 import useSWR from "swr";
