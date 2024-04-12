@@ -37,7 +37,7 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
       idle: "badge-warning"
     }
     const dcStatus = data?.discord_status;
-    const status = statuses[dcStatus]
+    const status = ""
 
     const {t, i18n} = useTranslation(['about'])
     return (
