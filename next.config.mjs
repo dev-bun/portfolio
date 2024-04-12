@@ -2,6 +2,9 @@
 import config from './next-i18next.config.js'
 
 const nextConfig = {
+  experimental: {
+    runtime: 'experimental-edge',
+  },
   reactStrictMode: true,
   i18n: config.i18n,
   images: {

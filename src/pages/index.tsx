@@ -11,9 +11,14 @@ import { HSCarousel } from "preline";
 import { FaBrazilianRealSign, FaDiscord, FaGithub, FaInstagram, FaSpotify, FaTiktok, FaXTwitter, FaYoutube, FaJs, FaNodeJs, FaHtml5, FaReact, FaCss3 } from 'react-icons/fa6'
 import { SiKotlin, SiTypescript, SiJavascript, SiNextdotjs, SiReact, SiHtml5, SiCsharp, SiCss3, SiNpm, SiTailwindcss } from "react-icons/si";
 import { setDefaultAutoSelectFamily } from "net";
+import useSWR from "swr";
 type Props = {
     // Add custom props here
 }
+import prettyMS from 'pretty-ms';
+import Layout from "@/components/Layout";
+
+const fetcher = (url: any) => fetch(url).then((r:any) => r.json())
 
 const DISCORD_ID = "407859300527243275"
 
@@ -23,52 +28,46 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
     var [ duration, setDuration ]= useState<any>(0);
     var [ current, setCurrent ] = useState<any>("00:00");
     var [ durationM, setDurationM ] = useState<any>("00:00")
-    useEffect(() => {
-      console.log("I love Alice ❤️")
-      const inter = setInterval(() => {
-        const start = new Date(Number(data?.spotify?.timestamps.start))
-        const end = new Date(Number(data?.spotify?.timestamps.end))
-        const calcDuration = Math.floor((end.getTime() - start.getTime()) / 1000).toFixed();
-        // if(duration && calcDuration !== duration) clearInterval(interv);
-        setDuration(calcDuration)
-        setCT(Math.floor((Date.now() - start.getTime()) / 1000).toFixed());
-        setDurationM(`${("0"+new Date((end.getTime()-start.getTime())).getMinutes()).slice(-2)}:${("0" + new Date((end.getTime()-start.getTime())).getSeconds()).slice(-2)}`)
-        setCurrent(`${("0"+new Date((Date.now() - start.getTime())).getMinutes()).slice(-2)}:${("0"+new Date((Date.now() - start.getTime())).getSeconds()).slice(-2)}`)
-      }, 1000)
-      return () => clearInterval(inter)
-    }, [data])
-   /* useEffect(() => {
-      if(oldData !== data) return clearInterval(inter)
-    }, [data])*/
+    const router = useRouter()
+    const { data: spotify } = useSWR("/api/spotify", fetcher, {  refreshInterval: 1000 })
+    const statuses = {
+      online: "badge-success",
+      offline: "badge-neutral",
+      dnd: "badge-error",
+      idle: "badge-warning"
+    }
+    const dcStatus = data?.discord_status;
+    const status = statuses[dcStatus]
+
     const {t, i18n} = useTranslation(['about'])
     return (
-        <>
+        <Layout>
         <div className="grid grid-cols-1 content-center md:grid-cols-2 gap-2 p-5 w-full">
             <div className="flex flex-col bg-blue-900 text-slate-100 p-3 rounded-xl" id="whoiam">
               <p className="text-2xl font-black">{t("title")}</p>
               <p className="ml-1">{t("description", {age: 15})}</p>
             </div>
-            <div onClick={() => window.open(data?.listening_to_spotify?`https://open.spotify.com/track/${data.spotify?.track_id}?ref=igor.is-a.dev`:"https://open.spotify.com/playlist/2BbTZ0WHEf7nkq5kH9WmXU")} className="select-none hover:scale-[0.95] scale-1 transition-all hover:bg-[#1DB954]/50 col-span-1 flex flex-col bg-[#1DB954] text-slate-200 p-3 rounded-xl overflow-hidden text-ellipsis whitespace-nowrap">
+            <div onClick={() => router.push("/spotify")} className="select-none hover:scale-[0.95] scale-1 transition-all hover:bg-[#1DB954]/50 col-span-1 flex flex-col bg-[#1DB954] text-slate-200 p-3 rounded-xl overflow-hidden text-ellipsis whitespace-nowrap">
               <div className="py-2"><Image width="100" height="100" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"}/></div>
-              {data?.listening_to_spotify?(<div className="mt-1 pb-2 flex">
-                <div key={data.spotify?.album}>
+              {spotify?.isPlaying?(<div className="mt-1 pb-2 flex">
+                <div key={spotify?.album}>
                   <AnimatePresence>
                     <motion.div
                        initial={{ opacity: 0 }}
                        animate={{ opacity: 1 }}
                        exit={{ opacity: 0 }}>
                         <div>
-                         <Image placeholder="blur" blurDataURL={"/loading.png"} className="rounded" width="100" height="100" alt="Song Cover" src={!data?.spotify?.album_art_url?"/loading.png":data?.spotify?.album_art_url}/>
+                         <Image placeholder="blur" blurDataURL={"/loading.png"} className="rounded" width="100" height="100" alt="Song Cover" src={!spotify?.albumImageUrl?"/loading.png":spotify?.albumImageUrl}/>
                          {/*<Image placeholder="blur" blurDataURL={"/loading.png"} className="absolute rounded" width="100" height="100" alt="Song Cover" src={!data?.spotify?.album_art_url?"/loading.png":data?.spotify?.album_art_url}/>*/}
                         </div>
                     </motion.div>
                   </AnimatePresence>
                 </div>
                 <div className="w-full flex flex-col px-2 justify-center truncate">
-                  <p className="w-full text-xl font-black">{data?.spotify?.song}</p>
-                  <p className="w-full font-medium">{data?.spotify?.artist}</p>
-                  <progress value={ct} max={duration} className="w-full [&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:transition-all [&::-webkit-progress-value]:duration-500 [&::-webkit-progress-value]:bg-green-700 [&::-moz-progress-bar]:transition-all [&::-moz-progress-bar]:duration-500 [&::-moz-progress-bar]:bg-green-700"></progress>
-                  <div className="flex justify-between"><p className="font-bold">{current}</p><p className="font-bold">{durationM}</p></div>
+                  <p className="w-full text-xl font-black">{spotify?.title}</p>
+                  <p className="w-full font-medium">{spotify?.artist}</p>
+                  <progress value={spotify?.progress} max={spotify?.duration} className="w-full [&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:transition-all [&::-webkit-progress-value]:duration-500 [&::-webkit-progress-value]:bg-green-700 [&::-moz-progress-bar]:transition-all [&::-moz-progress-bar]:duration-500 [&::-moz-progress-bar]:bg-green-700"></progress>
+                  <div className="flex justify-between"><p className="font-bold">{prettyMS(spotify?.progress, {colonNotation: true, secondsDecimalDigits: 0})}</p><p className="font-bold">{prettyMS(spotify?.duration, {colonNotation: true, secondsDecimalDigits: 0})}</p></div>
                 </div>
               </div>):(<div className="mt-1 pb-2 flex">
                 <div>
@@ -122,23 +121,20 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
                 <div className="justify-center items-center relative">
                   <Image className="z-[10] scale-[1.2] absolute w-24" width="100" height="100" alt="De" src={`https://cdn.discordapp.com/avatar-decoration-presets/${data?.discord_user.avatar_decoration_data?.asset}?size=4096`}/>
                   <div className="scale-[1]">
+                    <div className="right-3 bottom-0 absolute flex gap-2 text-center items-center"><span className={`badge badge-sm ${status} transition-all`}></span></div>
                     <Image className="w-24 rounded-full" width="100" height="100" alt="Me" src={`https://cdn.discordapp.com/avatars/${data?.discord_user.id}/${data?.discord_user.avatar}?size=4096`}/>
                   </div>
                 </div>
                 <div className="h-full flex flex-col justify-center hover:cursor-pointer">
-                  <span className="flex">
+                  <span className="flex gap-2 ">
                     <p className="text-xl font-black">{data?.discord_user.username}</p>
-                    {/*<span className="flex justify-start">
-                      <Image src="https://raw.githubusercontent.com/mezotv/discord-badges/main/assets/hypesquadbravery.svg" height="20" width="20" alt="Hypesquad Bravery"/>
-                      <Image src="https://raw.githubusercontent.com/mezotv/discord-badges/main/assets/username.png" height="18" width="22" alt="Known as Igor#6159"/>
-    </span>*/}
                   </span>
                   <p className="opacity-[0.8]">{data?.activities[0] && data?.activities[0].type===4?data.activities[0].state:""}</p>
                 </div>
               </div>
             </div>
         </div>
-        </>
+        </Layout>
     )
 }
 
