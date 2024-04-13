@@ -6,10 +6,11 @@ import useSWR from "swr";
 const fetcher = (url: any) => fetch(url).then((r:any) => r.json())
 
 export default function Spotify() {
-    const { data: spotify } = useSWR("/api/spotify", fetcher, {refreshInterval: 1000})
+    const { data: spotify } = useSWR("/api/spotify", fetcher, { refreshInterval: 100 })
     return(<Layout>
         <div className="flex flex-col w-full h-[94vh] md:h-screen overflow-hidden bg-[#1DB954]">
             <div className="p-4"><Image width="130" height="130" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"}/></div>
+            <div className="p-5 w-full fixed bottom-0"></div>
             {spotify?.isPlaying?(
             <div className="flex flex-col mt-1 p-2">
                <div className="flex p-3">
@@ -35,17 +36,16 @@ export default function Spotify() {
                 </div>
             </div>
             <hr className="divider"/>
-            <p className="text-xl font-black">Up next</p>
+            <p className="p-2 text-xl font-black">Up next</p>
             <motion.ul layoutScroll style={{ overflow: "scroll" }} className="flex flex-col w-full">
                 <AnimatePresence mode="sync" initial={false}>
                     {spotify?.queue.map((q: any) => (
                     <motion.li
                        layout
-                      // initial={{ opacity: 0 }}
                        animate={{ y:0, opacity: 1 }}
-                       exit={{ y:-50, opacity: 0 }}
+                       exit={{ y:-(100+q?.artist.length+q?.title.length*2), opacity: 0 }}
                        transition={{ type: "tween" }}
-                       className="flex p-2 mt-1"
+                       className="flex p-2 mt-1 w-full backdrop-blur-lg rounded-2xl"
                        key={q?.title}
                     >
                         <div key={q?.album}>

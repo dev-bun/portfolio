@@ -12,7 +12,7 @@ const basic = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
 const NOW_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player/currently-playing`;
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
 const QUEUE_ENDPOINT = `https://api.spotify.com/v1/me/player/queue`
-
+const HISTORY_ENDPOINT = `https://api.spotify.com/v1/me/player/recently-played`
 export type Queue = {
   title?: string;
   artist?: string;
@@ -72,17 +72,30 @@ export const getQueue = async () => {
   })
 }
 
+export const getHistory = async () => {
+  const { access_token } = await getAccessToken();
+  return fetch(HISTORY_ENDPOINT, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    }
+  })
+}
+
 export default async function GET(req: NextApiRequest, res: NextApiResponse<SongInfo>) {
   const response = await getNowPlaying();
   const que = await getQueue();
+  const his = await getHistory();
   if (response.status === 204 || response.status > 400) {
-    return res.status(200).json({ isPlaying: false });
+    return NextResponse.json({ isPlaying: false }, { status: 200 });
   }
   const song = await response.json();
   const queu = await que.json();
+  const histo = await his.json();
+
   const queue = queu.queue;
   var item: any = []
   await queue.forEach(async (q: any) => {
+    if(item.filter((n: any) => n?.title === q?.name).length >= 1) return;
     item.push({
       album: q.album.name,
       title: q.name,
