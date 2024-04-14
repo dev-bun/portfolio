@@ -11,24 +11,28 @@ export default async function PutSong(req: NextApiRequest, res: NextApiResponse)
     const music = await son.json()
     if(son.status !== 200) return NextResponse.json({
         code: 500,
-        text: 'Interval Server Error.'
+        text: 'Interval Server Error.',
+        debug: url.searchParams.get("debug") ? music : undefined
     }, {
         status: 500
     })
     console.log(music.tracks.items[0].uri)
     if(!music.tracks.items[0]) return NextResponse.json({
-        code: 404,
-        text: 'Can\'t fucking find that song'
-    }, { status: 404 });
+        code: 500,
+        text: 'Internal Server Error.',
+        debug: url.searchParams.get("debug") ? (music || undefined) : undefined
+    }, { status: 500 });
 
     const song = await putSong(music?.tracks.items[0].uri)
     if(song.status !== 200) return NextResponse.json({
         code: 500,
-        text: 'For some reason, can\'t add that song.'
+        text: 'Internal Server Error.',
+        debug: url.searchParams.get("debug") ? (music || undefined) : undefined
     }, { status: 500 });
 
     return NextResponse.json({
         code: 200,
-        text: "success!"
+        text: "success!",
+        debug: url.searchParams.get("debug") ? (music || undefined) : undefined
     }, { status: 200 })
 }
