@@ -17,14 +17,14 @@ export default async function PutSong(req: NextApiRequest, res: NextApiResponse)
     })
     console.log(music.tracks.items[0].uri)
     if(!music.tracks.items[0]) return NextResponse.json({
-        code: 500,
-        text: 'Internal Server Error.'
-    }, { status: 500 });
+        code: 404,
+        text: 'Can\'t fucking find that song'
+    }, { status: 404 });
 
     const song = await putSong(music?.tracks.items[0].uri)
     if(song.status !== 200) return NextResponse.json({
         code: 500,
-        text: 'Internal Server Error.'
+        text: 'For some reason, can\'t add that song.'
     }, { status: 500 });
 
     return NextResponse.json({
