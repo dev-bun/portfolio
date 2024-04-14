@@ -82,6 +82,14 @@ export const getHistory = async () => {
     }
   })
 }
+export const getSong = async (song: string) => {
+  const { access_token } = await getAccessToken();
+  return fetch(`https://api.spotify.com/v1/search?query=${song}&type=track&market=BR&locale=pt-BR&offset=0&limit=1`, {
+    headers: {
+      Authorization: `Bearer ${access_token}`
+    }
+  })
+}
 export const putSong = async (song: string) => {
   const { access_token } = await getAccessToken();
   return fetch(QUEUE_ENDPOINT + "?uri="+song, {

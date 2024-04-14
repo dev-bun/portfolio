@@ -11,11 +11,9 @@ export default function Spotify() {
     const { data: spotify } = useSWR("/api/spotify", fetcher, { refreshInterval: 100 })
     const [ color, setColor ] = useState("#FFFFFF")
     const addSong = async () => {
-      const inpt = prompt("Song url");
-      const first = inpt?.replace("https://open.spotify.com/track/", "") as string;
-      const second = first.replace(/\?+.*/gm, "");
+      const inpt = prompt("Song name");
 
-      await fetch("/api/putSong?song=spotify:track:" + second, {
+      await fetch("/api/putSong?song=" + inpt, {
          method: 'post'
          
       })
