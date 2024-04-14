@@ -2,11 +2,14 @@ import Layout from "@/components/Layout";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import prettyMilliseconds from "pretty-ms";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 const fetcher = (url: any) => fetch(url).then((r:any) => r.json())
+import Vibrant from 'node-vibrant'
 
 export default function Spotify() {
     const { data: spotify } = useSWR("/api/spotify", fetcher, { refreshInterval: 100 })
+    const [ color, setColor ] = useState("#FFFFFF")
     const addSong = async () => {
       const inpt = prompt("Song url");
       const first = inpt?.replace("https://open.spotify.com/track/", "") as string;
@@ -18,10 +21,20 @@ export default function Spotify() {
       })
     //  alert("Desativado temporariamente: Provavelmente vou ativar novamente em breve...")
     }
+    useEffect(function() {
+      async function getCol() {
+        if(spotify?.isPlaying) {
+          const col = await Vibrant.from(spotify?.albumImageUrl).getPalette();
+
+          setColor(col.Vibrant?.hex.toString() as string)
+        }
+      }
+      getCol()
+    }, [spotify])
     return(<Layout>
-        <div className="flex flex-col w-full h-[94vh] md:h-screen overflow-hidden bg-[#1DB954]">
-            <div className="p-4"><Image width="130" height="130" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"}/></div>
-            <div className="p-5 w-full fixed bottom-0"></div>
+        <div className="flex flex-col w-full h-[94vh] md:h-screen overflow-hidden bg-[#1b1b1b]">
+            <div className={spotify?.isPlaying?`p-5 w-full fixed z-[50] blur-3xl transition-all`:"p-5 w-full fixed z-[50] blur-3xl transition-all bg-[#1b1b1b]"} style={{ backgroundColor: `${color}` }}></div>
+            <div className="p-4 sticky z-[60]"><Image width="130" height="130" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"}/></div>
             {spotify?.isPlaying?(
             <div className="flex flex-col mt-1 p-2">
                <div className="flex p-3">
@@ -31,9 +44,9 @@ export default function Spotify() {
                        initial={{ opacity: 0 }}
                        animate={{ opacity: 1 }}
                        exit={{ opacity: 0 }}>
-                        <div>
-                         <Image placeholder="blur" blurDataURL={"/loading.png"} className="rounded" width="150" height="150" alt="Song Cover" src={spotify?.albumImageUrl}/>
-                         {/*<Image placeholder="blur" blurDataURL={"/loading.png"} className="absolute rounded" width="100" height="100" alt="Song Cover" src={!data?.spotify?.album_art_url?"/loading.png":data?.spotify?.album_art_url}/>*/}
+                        <div className="">
+                          <Image placeholder="blur" blurDataURL={"/loading.png"} className="rounded" width="150" height="150" alt="Song Cover" src={spotify?.albumImageUrl}/>
+                          {/*<Image placeholder="blur" blurDataURL={"/loading.png"} className="absolute blur-xl rounded" width="150" height="150" alt="Song Cover" src={spotify?.albumImageUrl}/>*/}
                         </div>
                     </motion.div>
                   </AnimatePresence>
@@ -49,9 +62,9 @@ export default function Spotify() {
             <hr className="divider"/>
             <div className="p-2 flex justify-between">
               <p className="text-xl font-black">Up next</p>
-              <button className="rounded-xl px-2 bg-green-700 text-xl font-black text-center hover:opacity-[0.5] transition-all" onClick={addSong}>+</button>
+              <button className="rounded-xl px-2 bg-green-900 text-xl font-black text-center hover:opacity-[0.5] transition-all" onClick={addSong}>+</button>
             </div>
-            <motion.ul layoutScroll style={{ overflow: "scroll" }} className="flex flex-col w-full">
+            <motion.ul layoutScroll style={{ overflow: "hidden" }} className="flex flex-col w-full">
                 <AnimatePresence mode="sync" initial={false}>
                     {spotify?.queue.map((q: any) => (
                     <motion.li
@@ -68,14 +81,14 @@ export default function Spotify() {
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               exit={{ opacity: 0 }}>
-                               <div>
-                                <Image placeholder="blur" blurDataURL={"/loading.png"} className="rounded" width="75" height="75" alt="Song Cover" src={q?.albumImageUrl}/>
-                                {/*<Image placeholder="blur" blurDataURL={"/loading.png"} className="absolute rounded" width="100" height="100" alt="Song Cover" src={!data?.spotify?.album_art_url?"/loading.png":data?.spotify?.album_art_url}/>*/}
-                                </div>
+                               <div className="relative">
+                                <Image placeholder="blur" blurDataURL={"/loading.png"} className="absolute z-10 rounded" width="75" height="75" alt="Song Cover" src={q?.albumImageUrl}/>
+                                <Image placeholder="blur" blurDataURL={"/loading.png"} className="blur-xl rounded" width="100" height="100" alt="Song Cover" src={q?.albumImageUrl}/>
+                              </div>
                             </motion.div>
                            </AnimatePresence>
                         </div>
-                        <div className="px-2 flex flex-col justify-center w-full truncate">
+                        <div className="drop-shadow-xl px-2 flex flex-col justify-center w-full truncate">
                           <p className="w-full text-lg font-black">{q?.title}</p>
                           <p className="w-full text-md font-medium">{q?.artist}</p>
                         </div>

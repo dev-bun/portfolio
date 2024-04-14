@@ -104,6 +104,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
   // console.log(histo.items)
   const queue = queu.queue;
   const history = histo.items;
+  
   var item: any = []
   var historyItem: any = []
 
@@ -137,6 +138,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
   const duration = song.item.duration_ms;
   const progress = song.progress_ms
   const preview = song.item.preview_url
+
   return NextResponse.json({
     album,
     albumImageUrl,
