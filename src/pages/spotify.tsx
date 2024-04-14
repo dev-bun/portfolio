@@ -62,7 +62,7 @@ export default function Spotify() {
               <p className="text-xl font-black">Up next</p>
               <button className="rounded-xl px-2 bg-green-900 text-xl font-black text-center hover:opacity-[0.5] transition-all" onClick={addSong}>+</button>
             </div>
-            <motion.ul layoutScroll style={{ overflow: "hidden" }} className="flex flex-col w-full">
+            <motion.ul layoutScroll style={{ overflow: "scroll" }} className="flex flex-col w-full">
                 <AnimatePresence mode="sync" initial={false}>
                     {spotify?.queue.map((q: any) => (
                     <motion.li
