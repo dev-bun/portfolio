@@ -8,15 +8,15 @@ const fetcher = (url: any) => fetch(url).then((r:any) => r.json())
 export default function Spotify() {
     const { data: spotify } = useSWR("/api/spotify", fetcher, { refreshInterval: 100 })
     const addSong = async () => {
-      /*const inpt = prompt("Song url");
+      const inpt = prompt("Song url");
       const first = inpt?.replace("https://open.spotify.com/track/", "") as string;
-      const second = first.replace(/\?+.
+      const second = first.replace(/\?+/g, "").
 
       await fetch("/api/putSong?song=spotify:track:" + second, {
          method: 'post'
          
-      })*/
-      alert("Desativado temporariamente: Provavelmente vou ativar novamente em breve...")
+      })
+    //  alert("Desativado temporariamente: Provavelmente vou ativar novamente em breve...")
     }
     return(<Layout>
         <div className="flex flex-col w-full h-[94vh] md:h-screen overflow-hidden bg-[#1DB954]">
