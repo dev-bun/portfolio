@@ -10,7 +10,7 @@ export default function Spotify() {
     const addSong = async () => {
       const inpt = prompt("Song url");
       const first = inpt?.replace("https://open.spotify.com/track/", "") as string;
-      const second = first.replace(/\?+/g, "").
+      const second = first.replace(/\?+.*/gm, "");
 
       await fetch("/api/putSong?song=spotify:track:" + second, {
          method: 'post'
