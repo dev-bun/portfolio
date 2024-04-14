@@ -15,7 +15,6 @@ export default function Spotify() {
 
       await fetch("/api/putSong?song=" + inpt, {
          method: 'post'
-         
       })
     //  alert("Desativado temporariamente: Provavelmente vou ativar novamente em breve...")
     }
@@ -30,7 +29,7 @@ export default function Spotify() {
       getCol()
     }, [spotify])
     return(<Layout>
-        <div className="flex flex-col w-full h-[94vh] md:h-screen overflow-hidden bg-[#1b1b1b]">
+        <div className="flex flex-col w-full h-[94vh] md:h-screen bg-[#1b1b1b]">
             <div className={spotify?.isPlaying?`p-5 w-full fixed z-[50] blur-3xl transition-all`:"p-5 w-full fixed z-[50] blur-3xl transition-all bg-[#1b1b1b]"} style={{ backgroundColor: `${color}` }}></div>
             <div className="p-4 sticky z-[60]"><Image width="130" height="130" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"}/></div>
             {spotify?.isPlaying?(
