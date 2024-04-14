@@ -7,6 +7,16 @@ const fetcher = (url: any) => fetch(url).then((r:any) => r.json())
 
 export default function Spotify() {
     const { data: spotify } = useSWR("/api/spotify", fetcher, { refreshInterval: 100 })
+    const addSong = async () => {
+      const inpt = prompt("Song url");
+      const first = inpt?.replace("https://open.spotify.com/track/", "") as string;
+      const second = first.replace(/\?+.*/gm,"")
+
+      await fetch("/api/putSong?song=spotify:track:" + second, {
+         method: 'post'
+         
+      })
+    }
     return(<Layout>
         <div className="flex flex-col w-full h-[94vh] md:h-screen overflow-hidden bg-[#1DB954]">
             <div className="p-4"><Image width="130" height="130" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"}/></div>
@@ -36,7 +46,10 @@ export default function Spotify() {
                 </div>
             </div>
             <hr className="divider"/>
-            <p className="p-2 text-xl font-black">Up next</p>
+            <div className="p-2 flex justify-between">
+              <p className="text-xl font-black">Up next</p>
+              <button className="rounded-xl px-2 bg-green-700 text-xl font-black text-center hover:opacity-[0.5] transition-all" onClick={addSong}>+</button>
+            </div>
             <motion.ul layoutScroll style={{ overflow: "scroll" }} className="flex flex-col w-full">
                 <AnimatePresence mode="sync" initial={false}>
                     {spotify?.queue.map((q: any) => (

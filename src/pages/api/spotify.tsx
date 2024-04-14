@@ -12,7 +12,7 @@ const basic = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
 const NOW_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player/currently-playing`;
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
 const QUEUE_ENDPOINT = `https://api.spotify.com/v1/me/player/queue`
-const HISTORY_ENDPOINT = `https://api.spotify.com/v1/me/player/recently-played`
+const HISTORY_ENDPOINT = `https://api.spotify.com/v1/me/player/recently-played?limit=3`
 export type Queue = {
   title?: string;
   artist?: string;
@@ -30,6 +30,8 @@ export type SongInfo = {
   songUrl?: string;
   progress?: number;
   queue?: Queue;
+  history?: Queue;
+  preview?: string;
 }
 
 const getAccessToken = async () => {
@@ -80,7 +82,15 @@ export const getHistory = async () => {
     }
   })
 }
-
+export const putSong = async (song: string) => {
+  const { access_token } = await getAccessToken();
+  return fetch(QUEUE_ENDPOINT + "?uri="+song, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    }
+  })
+}
 export default async function GET(req: NextApiRequest, res: NextApiResponse<SongInfo>) {
   const response = await getNowPlaying();
   const que = await getQueue();
@@ -91,9 +101,22 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
   const song = await response.json();
   const queu = await que.json();
   const histo = await his.json();
-
+  // console.log(histo.items)
   const queue = queu.queue;
+  const history = histo.items;
   var item: any = []
+  var historyItem: any = []
+
+  await history.forEach(async (q: any) => {
+   // console.log(q.track.album.images)
+    if(history.length < 1) return;
+    historyItem.push({
+      album: q.track.album.name,
+      title: q.track.name,
+      artist: q.track.artists.map((_artist: any) => _artist.name).join(', '),
+      albumImageUrl: q.track.album.images[0].url
+    })
+  })
   await queue.forEach(async (q: any) => {
     if(item.filter((n: any) => n?.title === q?.name).length >= 1) return;
     item.push({
@@ -113,7 +136,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
   const songUrl = song.item.external_urls.spotify;
   const duration = song.item.duration_ms;
   const progress = song.progress_ms
-
+  const preview = song.item.preview_url
   return NextResponse.json({
     album,
     albumImageUrl,
@@ -123,6 +146,8 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
     title,
     duration,
     progress,
-    queue: item
+    preview,
+    queue: item,
+    history: historyItem
   }, { status: 200 });
 };
