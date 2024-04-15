@@ -12,7 +12,7 @@ export default async function PutSong(req: NextApiRequest, res: NextApiResponse)
     if(son.status !== 200) return NextResponse.json({
         code: 500,
         text: 'Interval Server Error.',
-        debug: url.searchParams.get("debug") ? music : undefined
+        debug: url.searchParams.get("debug") ? { music: music, error: "Failed to fetch songs" } : { status: "Failed to fetch songs" }
     }, {
         status: 500
     })
@@ -20,19 +20,19 @@ export default async function PutSong(req: NextApiRequest, res: NextApiResponse)
     if(!music.tracks.items[0]) return NextResponse.json({
         code: 500,
         text: 'Internal Server Error.',
-        debug: url.searchParams.get("debug") ? (music || undefined) : undefined
+        debug: url.searchParams.get("debug") ? { music: music, status: "No matching songs found." } : { status: "No matching songs found." }
     }, { status: 500 });
 
     const song = await putSong(music?.tracks.items[0].uri)
     if(song.status !== 200) return NextResponse.json({
         code: 500,
         text: 'Internal Server Error.',
-        debug: url.searchParams.get("debug") ? (music || undefined) : undefined
+        debug: url.searchParams.get("debug") ? { music: music, status: song } : { status: song }
     }, { status: 500 });
 
     return NextResponse.json({
         code: 200,
         text: "success!",
-        debug: url.searchParams.get("debug") ? (music || undefined) : undefined
+        debug: url.searchParams.get("debug") ? { music: music, status: song } : { status: song }
     }, { status: 200 })
 }
