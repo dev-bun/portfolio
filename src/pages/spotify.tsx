@@ -29,7 +29,7 @@ export default function Spotify() {
       getCol()
     }, [spotify])
     return(<Layout>
-        <div className="flex flex-col w-full h-[94vh] md:h-screen">
+        <div className="flex flex-col w-full h-[94vh] md:h-screen overflow-hidden">
             <div className={spotify?.isPlaying?`p-5 w-full fixed z-[50] blur-3xl transition-all`:"p-5 w-full fixed z-[50] blur-3xl transition-all bg-[#1b1b1b]"} style={{ backgroundColor: `${color}` }}></div>
             <div className="p-4 sticky z-[60]"><Image width="130" height="130" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"}/></div>
             {spotify?.isPlaying?(
@@ -61,7 +61,7 @@ export default function Spotify() {
               <p className="text-xl font-black">Up next</p>
               <button className="rounded-xl px-2 bg-green-900 text-xl font-black text-center hover:opacity-[0.5] transition-all" onClick={addSong}>+</button>
             </div>
-            <motion.ul layoutScroll style={{ overflow: "scroll" }} className="flex flex-col w-full">
+            <motion.ul layoutScroll className="flex flex-col w-full h-full overflow-y-scroll">
                 <AnimatePresence mode="sync" initial={false}>
                     {spotify?.queue.map((q: any) => (
                     <motion.li
