@@ -6,7 +6,7 @@ export default function Document() {
   return (
     <Html>
       <Head />
-      <body className="w-full bg-slate-900 text-slate-100">
+      <body className="w-full bg-[#1b1b1b] text-slate-100">
         <Main />
         <NextScript />
         <PrelineScript/>
