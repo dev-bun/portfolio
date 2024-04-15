@@ -1,14 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { NextResponse } from "next/server"
-import { getSong, putSong } from "./spotify";
+import { getQueue, getSong, putSong } from "./spotify";
 
 export const runtime = 'edge'
 
 export default async function PutSong(req: NextApiRequest, res: NextApiResponse) {
     if(req.method?.toLowerCase() !== "post") return NextResponse.json({ code: 401, text: "Unauthorized" }, { status: 401 });
     const url = new URL(req.url as string)
+    const que = await getQueue();
     const son = await getSong(url.searchParams.get("song") as string)
     const music = await son.json()
+    const { queue } = await que.json()
     if(son.status !== 200) return NextResponse.json({
         code: 500,
         text: 'Interval Server Error.',
@@ -23,6 +25,9 @@ export default async function PutSong(req: NextApiRequest, res: NextApiResponse)
         debug: url.searchParams.get("debug") ? { music: music, status: "No matching songs found." } : { status: "No matching songs found." }
     }, { status: 500 });
 
+    const q = queue.find((q: any) => q.uri === music.tracks.items[0].uri)
+
+    //:console.log(q.uri)
     const song = await putSong(music?.tracks.items[0].uri)
     if(song.status !== 200) return NextResponse.json({
         code: 500,

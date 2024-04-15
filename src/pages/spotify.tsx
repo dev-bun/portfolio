@@ -12,7 +12,7 @@ export default function Spotify() {
     const [ color, setColor ] = useState("#FFFFFF")
     const addSong = async () => {
       const inpt = prompt("Song name");
-
+      if(!inpt) return alert("Não pude encontrar a música, pois você deixou em branco.");
       await fetch("/api/putSong?song=" + inpt, {
          method: 'post'
       })
