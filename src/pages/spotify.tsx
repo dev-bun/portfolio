@@ -56,12 +56,12 @@ export default function Spotify() {
                   <div className="flex justify-between"><p className="font-bold">{prettyMilliseconds(spotify?.progress, {colonNotation: true, secondsDecimalDigits: 0})}</p><p className="font-bold">{prettyMilliseconds(spotify?.duration, {colonNotation: true, secondsDecimalDigits: 0})}</p></div>
                 </div>
             </div>
-            <hr className="divider"/>
-            <div className="p-2 flex justify-between">
+            <div className="divider"></div>
+            <div className="backdrop-blur-xl p-2 flex justify-between w-full">
               <p className="text-xl font-black">Up next</p>
               <button className="rounded-xl px-2 bg-green-900 text-xl font-black text-center hover:opacity-[0.5] transition-all" onClick={addSong}>+</button>
             </div>
-            <motion.ul layoutScroll className="flex flex-col w-full h-full overflow-y-scroll">
+            <motion.ul layoutScroll className="flex flex-col w-full h-screen overflow-scroll pt-8 pb-20">
                 <AnimatePresence mode="sync" initial={false}>
                     {spotify?.queue.map((q: any) => (
                     <motion.li
