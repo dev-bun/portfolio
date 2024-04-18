@@ -11,13 +11,14 @@ const {
 const basic = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
 const NOW_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player/currently-playing`;
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
-const QUEUE_ENDPOINT = `https://api.spotify.com/v1/me/player/queue`
+const QUEUE_ENDPOINT = `https://api.spotify.com/v1/me/player/queue?limit=3`
 const HISTORY_ENDPOINT = `https://api.spotify.com/v1/me/player/recently-played?limit=3`
 export type Queue = {
   title?: string;
   artist?: string;
   album?: string;
   albumImageUrl?: string;
+  current?: boolean;
 }
 
 export type SongInfo = {
@@ -76,7 +77,9 @@ export const getQueue = async () => {
 
 export const getHistory = async () => {
   const { access_token } = await getAccessToken();
-  return fetch(HISTORY_ENDPOINT, {
+  const now = new Date()
+  const then = new Date(now.getFullYear(),now.getMonth(),now.getDay(),now.getHours(),59,59,0)
+  return fetch(HISTORY_ENDPOINT + "&after=" + then.getTime(), {
     headers: {
       Authorization: `Bearer ${access_token}`,
     }
@@ -112,7 +115,6 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
   // console.log(histo.items)
   const queue = queu.queue;
   const history = histo.items;
-  
   var item: any = []
   var historyItem: any = []
 
@@ -123,7 +125,8 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
       album: q.track.album.name,
       title: q.track.name,
       artist: q.track.artists.map((_artist: any) => _artist.name).join(', '),
-      albumImageUrl: q.track.album.images[0].url
+      albumImageUrl: q.track.album.images[0].url,
+      current: false
     })
   })
   await queue.forEach(async (q: any) => {
@@ -132,7 +135,8 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
       album: q.album.name,
       title: q.name,
       artist: q.artists.map((_artist: any) => _artist.name).join(', '),
-      albumImageUrl: q.album.images[0].url
+      albumImageUrl: q.album.images[0].url,
+      current: false
     })
   })
   // console.log(item)
@@ -157,7 +161,21 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
     duration,
     progress,
     preview,
-    queue: item,
-    history: historyItem
+    queue: [
+    /*  ...historyItem,
+      {
+        album,
+        albumImageUrl,
+        artist,
+        isPlaying,
+        songUrl,
+        title,
+        duration,
+        progress,
+        preview,
+        current: true
+      }, */
+      ...item
+    ],
   }, { status: 200 });
 };
