@@ -98,7 +98,7 @@ export default function Spotify() {
             <motion.ul layoutScroll className="flex flex-col w-full h-screen overflow-hidden scroll-smooth">
                 <div className="sticky bottom-0 z-[40] p-2 flex justify-between w-full">
                   <p className="text-xl font-black">Up next</p>
-                  <button className="rounded-xl px-2 bg-green-900 text-xl font-black text-center hover:opacity-[0.5] transition-all" style={{ backgroundColor: mutedColor, color: lightMutedColor }} onClick={addSong}>+</button>
+                  <button className="rounded-xl px-2 py-0.5 bg-green-900 text-xl font-black text-center hover:opacity-[0.5] transition-all" style={{ backgroundColor: mutedColor, color: lightMutedColor }} onClick={addSong}>+</button>
                 </div>
                 {/*<div className="pt-20"></div>*/}
                 <AnimatePresence mode="sync" initial={false}>
@@ -106,7 +106,7 @@ export default function Spotify() {
                     <motion.li
                        layout
                        animate={{ y:0, opacity: 1 }}
-                       exit={{ y:-(100+q?.artist.length+q?.title.length*2), opacity: 0 }}
+                       exit={{ y:"-100%", opacity: 0 }}
                        transition={{ type: "tween" }}
                        className="flex p-2 mt-1 w-full backdrop-blur-lg rounded-2xl"
                        key={q?.title}
@@ -117,9 +117,9 @@ export default function Spotify() {
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               exit={{ opacity: 0 }}>
-                               <div className="relative">
-                                <Image placeholder="blur" blurDataURL={"/loading.png"} className="absolute z-10 rounded" width="75" height="75" alt="Song Cover" src={q?.albumImageUrl}/>
-                                <Image placeholder="blur" blurDataURL={"/loading.png"} className="blur-xl rounded" width="100" height="100" alt="Song Cover" src={q?.albumImageUrl}/>
+                               <div className="">
+                                <Image placeholder="blur" blurDataURL={"/loading.png"} className="z-10 rounded" width="100" height="100" alt="Song Cover" src={q?.albumImageUrl}/>
+                                {/*<Image placeholder="blur" blurDataURL={"/loading.png"} className="blur-xl rounded" width="100" height="100" alt="Song Cover" src={q?.albumImageUrl}/>*/}
                               </div>
                             </motion.div>
                            </AnimatePresence>
