@@ -5,13 +5,13 @@ import { getQueue, getSong, putSong } from "./spotify";
 export const runtime = 'edge'
 
 export default async function PutSong(req: NextApiRequest, res: NextApiResponse) {
-    if(req.method?.toLowerCase() !== "post") return NextResponse.json({ code: 401, text: "Unauthorized" }, { status: 401 });
+    if (req.method?.toLowerCase() !== "post") return NextResponse.json({ code: 401, text: "Unauthorized" }, { status: 401 });
     const url = new URL(req.url as string)
     const que = await getQueue();
     const son = await getSong(url.searchParams.get("song") as string)
     const music = await son.json()
     const { queue } = await que.json()
-    if(son.status === 204 || son.status > 400) return NextResponse.json({
+    if (son.status === 204 || son.status > 400) return NextResponse.json({
         code: 500,
         text: 'Interval Server Error.',
         debug: url.searchParams.get("debug") ? { music: music, error: "Failed to fetch songs" } : { status: "Failed to fetch songs" }
@@ -19,7 +19,7 @@ export default async function PutSong(req: NextApiRequest, res: NextApiResponse)
         status: 500
     })
     console.log(music.tracks.items[0].uri)
-    if(!music.tracks.items[0]) return NextResponse.json({
+    if (!music.tracks.items[0]) return NextResponse.json({
         code: 500,
         text: 'Internal Server Error.',
         debug: url.searchParams.get("debug") ? { music: music, status: "No matching songs found." } : { status: "No matching songs found." }
@@ -31,11 +31,11 @@ export default async function PutSong(req: NextApiRequest, res: NextApiResponse)
     const song = await putSong(music?.tracks.items[0].uri)
     const songInfo = await song.text();
     console.log(songInfo)
-    if(song.status !== 204) {
+    if (song.status !== 204) {
         return NextResponse.json({
-          code: 500,
-          text: 'Internal Server Error.',
-          debug: url.searchParams.get("debug") ? { music: music, status: song } : { status: song }
+            code: 500,
+            text: 'Internal Server Error.',
+            debug: url.searchParams.get("debug") ? { music: music, status: song } : { status: song }
         }, { status: 500 });
     }
     return NextResponse.json({

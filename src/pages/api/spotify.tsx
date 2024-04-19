@@ -78,7 +78,7 @@ export const getQueue = async () => {
 export const getHistory = async () => {
   const { access_token } = await getAccessToken();
   const now = new Date()
-  const then = new Date(now.getFullYear(),now.getMonth(),now.getDay(),now.getHours(),59,59,0)
+  const then = new Date(now.getFullYear(), now.getMonth(), now.getDay(), now.getHours(), 59, 59, 0)
   return fetch(HISTORY_ENDPOINT + "&after=" + then.getTime(), {
     headers: {
       Authorization: `Bearer ${access_token}`,
@@ -95,7 +95,7 @@ export const getSong = async (song: string) => {
 }
 export const putSong = async (song: string) => {
   const { access_token } = await getAccessToken();
-  return fetch(QUEUE_ENDPOINT + "?uri="+song, {
+  return fetch(QUEUE_ENDPOINT + "?uri=" + song, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${access_token}`,
@@ -119,8 +119,8 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
   var historyItem: any = []
 
   await history.forEach(async (q: any) => {
-   // console.log(q.track.album.images)
-    if(history.length < 1) return;
+    // console.log(q.track.album.images)
+    if (history.length < 1) return;
     historyItem.push({
       album: q.track.album.name,
       title: q.track.name,
@@ -130,7 +130,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
     })
   })
   await queue.forEach(async (q: any) => {
-    if(item.filter((n: any) => n?.title === q?.name).length >= 1) return;
+    if (item.filter((n: any) => n?.title === q?.name).length >= 1) return;
     item.push({
       album: q.album.name,
       title: q.name,
@@ -162,7 +162,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
     progress,
     preview,
     queue: [
-    /*  ...historyItem,
+      ...historyItem,
       {
         album,
         albumImageUrl,
@@ -174,7 +174,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
         progress,
         preview,
         current: true
-      }, */
+      },
       ...item
     ],
   }, { status: 200 });
