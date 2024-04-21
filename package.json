@@ -12,6 +12,7 @@
     "@preline/carousel": "^2.1.0",
     "framer-motion": "^11.0.25",
     "i18next": "^23.10.1",
+    "javascript-time-ago": "^2.5.10",
     "next": "14.1.4",
     "next-i18next": "^15.2.0",
     "node-vibrant": "^3.1.6",

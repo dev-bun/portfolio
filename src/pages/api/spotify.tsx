@@ -11,8 +11,8 @@ const {
 const basic = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
 const NOW_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player/currently-playing`;
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
-const QUEUE_ENDPOINT = `https://api.spotify.com/v1/me/player/queue?limit=3`
-const HISTORY_ENDPOINT = `https://api.spotify.com/v1/me/player/recently-played?limit=3`
+const QUEUE_ENDPOINT = `https://api.spotify.com/v1/me/player/queue`
+const HISTORY_ENDPOINT = `https://api.spotify.com/v1/me/player/recently-played`// ?after=${new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay(), new Date().getHours(),59,59,999).getTime()}&before=${new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay(), new Date().getHours(),0,0,0).getTime()}`
 export type Queue = {
   title?: string;
   artist?: string;
@@ -79,7 +79,7 @@ export const getHistory = async () => {
   const { access_token } = await getAccessToken();
   const now = new Date()
   const then = new Date(now.getFullYear(), now.getMonth(), now.getDay(), now.getHours(), 59, 59, 0)
-  return fetch(HISTORY_ENDPOINT + "&after=" + then.getTime(), {
+  return fetch(HISTORY_ENDPOINT, {
     headers: {
       Authorization: `Bearer ${access_token}`,
     }
@@ -117,7 +117,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
   const history = histo.items;
   var item: any = []
   var historyItem: any = []
-
+ // console.log(history)
   await history.forEach(async (q: any) => {
     // console.log(q.track.album.images)
     if (history.length < 1) return;
@@ -126,7 +126,8 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
       title: q.track.name,
       artist: q.track.artists.map((_artist: any) => _artist.name).join(', '),
       albumImageUrl: q.track.album.images[0].url,
-      current: false
+      current: false,
+      playedAt: new Date(q.played_at).getTime()
     })
   })
   await queue.forEach(async (q: any) => {
@@ -136,11 +137,12 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
       title: q.name,
       artist: q.artists.map((_artist: any) => _artist.name).join(', '),
       albumImageUrl: q.album.images[0].url,
-      current: false
+      current: false,
+      playedAt: 0
     })
   })
   // console.log(item)
-
+  
   const isPlaying = song.is_playing;
   const title = song.item.name;
   const artist = song.item.artists.map((_artist: any) => _artist.name).join(', ');
@@ -173,7 +175,8 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
         duration,
         progress,
         preview,
-        current: true
+        current: true,
+        playedAt: song.timestamp
       },
       ...item
     ],
