@@ -64,7 +64,7 @@ export default function Spotify() {
   
   useEffect(function () {
     mutate()
-  }, [spotify ? spotify.progress : false])
+  }, [spotify ? spotify.progress : true])
   return (<Layout>
     <div className="overflow-hidden flex flex-col w-full bg-[#1b1b1b]" style={{
       'accentColor': color,
