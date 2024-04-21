@@ -9,10 +9,39 @@ const fetcher = (url: any) => fetch(url).then((r: any) => r.json())
 import Vibrant from 'node-vibrant'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
+import { Metadata, ResolvingMetadata } from "next";
 
 TimeAgo.addDefaultLocale(en)
 
 // const timeAgo = new TimeAgo('en-US')
+/*xport const metadata = {
+  title: "Spotify",
+  description: "Veja o que eu estou ouvindo, e adicione uma música para eu ouvir!"
+}*/
+
+type Props = {
+  params: { id: string }
+}
+ 
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  
+  const { title, artist, album, albumImageUrl  } = await fetch("https://igor.is-a.dev/api/spotify").then(res => res.json())
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent).openGraph?.images || []
+ 
+  return {
+    title: "Igor is a dev - Spotify",
+    description: "Listening to " + title + " - " + artist,
+    openGraph: {
+      title: "Igor is a dev - Spotify",
+      description: "Listening to " + title + " - " + artist,
+      images: [albumImageUrl, ...previousImages],
+    },
+  }
+}
 
 export default function Spotify() {
   const { data: spotify, mutate } = useSWR("/api/spotify", fetcher)
