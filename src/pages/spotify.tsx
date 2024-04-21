@@ -48,7 +48,7 @@ export default function Spotify() {
       window.scrollTo(0,0)
     }*/
     if(document) {
-     // document.getElementById("current")?.scrollIntoView({ inline: "center", block: "center", behavior: "smooth" })
+      document.getElementById("current")?.scrollIntoView({ inline: "center", block: "center", behavior: "smooth" })
     }
     async function getCol() {
       if (spotify?.isPlaying) {
@@ -124,7 +124,7 @@ export default function Spotify() {
                   animate={q?.current?{ opacity: 1 }:{ opacity: 0.5 }}
                   exit={{ opacity: 0.5 }}
                   transition={{ type: "tween", layout: { }, duration: 1, delay: 0.5 }}
-                  onTransitionEndCapture={() => { document.getElementById("current")?.scrollIntoView({ inline: 'center', block: 'center', behavior: 'smooth' }) }}
+                 // onTransitionEndCapture={() => { document.getElementById("current")?.scrollIntoView({ inline: 'center', block: 'center', behavior: 'smooth' }) }}
                   className="justify-center items-center flex p-2 mt-1 w-full backdrop-blur-lg rounded-2xl"
                   key={q?.title}
                   id={q?.current?"current":""}
