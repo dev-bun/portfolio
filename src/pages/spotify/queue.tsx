@@ -92,8 +92,9 @@ export default function Spotify() {
   }, [spotify])
   
   useEffect(function () {
-    const intervalId = setInterval(() => mutate(), 1000)
-    return () => clearInterval(intervalId);
+    /*const intervalId = setInterval(() => mutate(), 1000)
+    return () => clearInterval(intervalId);*/
+    mutate()
   }, [spotify ? spotify.progress : spotify])
 
   if(loading) return (
