@@ -69,7 +69,7 @@ export default function Spotify() {
             <p className="text-lg font-black">Top listened artists</p>
             <ul className="flex flex-col justify-center overflow-scroll">
                 {spotify?.top.artists.slice(0, 8).map((art: any) => (
-                    <motion.li initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} onClick={() => window.open(art.url)} className="p-2 flex items-center">
+                    <motion.li key={art.name} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} onClick={() => window.open(art.url)} className="p-2 flex items-center">
                         <Image className="rounded-full" style={{ width: 80, height: 80 }} src={art.avatar} alt={`${art.name}'s Avatar`} height="80" width="80"/>
                         <div className="flex flex-col p-2">
                             <p className="text-lg font-black">{art.name}</p>
@@ -82,7 +82,7 @@ export default function Spotify() {
             <p className="text-lg font-black">Top listened songs</p>
             <motion.ul className="flex flex-col justify-center">
               {spotify?.top.tracks.map((track: any) => (
-                <motion.li initial={{ opacity: 0 }} whileInView={{ opacity: 1, transition: { duration: 1 } }} onClick={() => window.open(track.url)} className="p-2 flex items-center">
+                <motion.li key={track.title} initial={{ opacity: 0 }} whileInView={{ opacity: 1, transition: { duration: 1 } }} onClick={() => window.open(track.url)} className="p-2 flex items-center">
                   <Image className="rounded" style={{ width: 80, height: 80 }} src={track.albumImageUrl} alt={`${track.title} cover`} height="80" width="80" />
                   <div className="flex flex-col p-2 gap-y-1 truncate ellipsis">
                     <p className="text-lg font-black">{track.title}</p>
