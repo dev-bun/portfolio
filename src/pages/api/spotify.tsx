@@ -57,6 +57,23 @@ const getAccessToken = async () => {
   return response.json();
 };
 
+export const getProfile = async () => {
+  const { access_token } = await getAccessToken();
+
+  return fetch("https://api.spotify.com/v1/me", {
+    headers: {
+      Authorization: `Bearer ${access_token}`
+    }
+  });
+}
+export const getTop = async (type: string) => {
+  const { access_token } = await getAccessToken();
+  return fetch("https://api.spotify.com/v1/me/top/"+ type, {
+    headers: {
+      Authorization: `Bearer ${access_token}`
+    }
+  })
+}
 export const getNowPlaying = async () => {
   const { access_token } = await getAccessToken();
 
@@ -106,10 +123,18 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
   const response = await getNowPlaying();
   const que = await getQueue();
   const his = await getHistory();
+  const pro = await getProfile();
+  const topArt = await getTop("artists");
+  const topTra = await getTop("tracks");
+  const profile = await pro.json();
+  var tracks: any = [];
+  var artists: any = [];
   if (response.status === 204 || response.status > 400) {
-    return NextResponse.json({ isPlaying: false }, { status: 200 });
+    return NextResponse.json({ profile, top: { tracks, artists }, isPlaying: false }, { status: 200 });
   }
   const song = await response.json();
+  const topArtists = await topArt.json();
+  const topTracks = await topTra.json();
   const queu = await que.json();
   const histo = await his.json();
   // console.log(histo.items)
@@ -141,6 +166,26 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
       playedAt: 0
     })
   })
+  // var artists: any = [];
+  await topArtists.items.forEach(async (q: any) => {
+    if(!q) return;
+    artists.push({
+      name: q.name,
+      avatar: q.images[0].url,
+      url: q.external_urls.spotify
+    })
+  })
+ // var tracks: any = [];
+  await topTracks.items.forEach(async (q: any) => {
+    if(!q) return;
+    tracks.push({
+      album: q.album.name,
+      artist: q.artists.map((_artist: any) => _artist.name).join(', '),
+      albumImageUrl: q.album.images[0].url,
+      title: q.name,
+      url: q.external_urls.spotify
+    })
+  })
   // console.log(item)
   
   const isPlaying = song.is_playing;
@@ -152,8 +197,13 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
   const duration = song.item.duration_ms;
   const progress = song.progress_ms
   const preview = song.item.preview_url
-
+  
   return NextResponse.json({
+    profile,
+    top: {
+      artists,
+      tracks
+    },
     album,
     albumImageUrl,
     artist,

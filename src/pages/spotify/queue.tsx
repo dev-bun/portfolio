@@ -44,7 +44,7 @@ export async function generateMetadata(
 }
 
 export default function Spotify() {
-  const { data: spotify, mutate } = useSWR("/api/spotify", fetcher)
+  const { data: spotify, mutate, isLoading: loading } = useSWR("/api/spotify", fetcher)
   const [color, setColor] = useState("#FFFFFF")
   const [mutedColor, setMutedColor] = useState("#FFFFFF")
   const [lightMutedColor, setLightColor] = useState("#000000")
@@ -92,8 +92,16 @@ export default function Spotify() {
   }, [spotify])
   
   useEffect(function () {
-    mutate()
-  }, [spotify ? spotify.progress : true])
+    const intervalId = setInterval(() => mutate(), 1000)
+    return () => clearInterval(intervalId);
+  }, [spotify ? spotify.progress : spotify])
+
+  if(loading) return (
+    <div className="h-screen w-full flex flex-col justify-center items-center">
+      <div className="loading loading-spinner loading-lg"></div>
+    </div>
+  )
+
   return (<Layout>
     <div className="overflow-hidden flex flex-col w-full bg-[#1b1b1b]" style={{
       'accentColor': color,
