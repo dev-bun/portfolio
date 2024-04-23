@@ -43,21 +43,21 @@ export async function generateMetadata(
   }
 }
 
-const keys = {
-  none: "idk",
-  0: "C",
-  1: "C♯",
-  2: "D",
-  3: "D♯",
-  4: "E",
-  5: "F",
-  6: "F♯",
-  7: "G",
-  8: "G♯",
-  9: "A",
-  10: "A♯",
-  11: "B"
-}
+const keys = [
+  "idk",
+  "C",
+  "C♯",
+  "D",
+  "D♯",
+  "E",
+  "F",
+  "F♯",
+  "G",
+  "G♯",
+  "A",
+  "A♯",
+  "B"
+]
 const mode = {
   0: "Major",
   1: "Minor"
@@ -192,7 +192,7 @@ export default function Spotify() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-2">
                   <div className="flex flex-col justify-center items-center text-center p-3">
                     <p className="text-lg font-bold">Key</p>
-                    <p className="text-xl font-black">{keys[spotify?.info.key === -1?"none":spotify?.info.key]}</p>
+                    <p className="text-xl font-black">{keys[spotify?.info.key+1]}</p>
                   </div>
                   <div className="flex flex-col justify-center items-center text-center p-3">
                     <p className="text-lg font-bold">Energy</p>
