@@ -43,15 +43,39 @@ export async function generateMetadata(
   }
 }
 
+const keys = {
+  none: "idk",
+  0: "C",
+  1: "C♯",
+  2: "D",
+  3: "D♯",
+  4: "E",
+  5: "F",
+  6: "F♯",
+  7: "G",
+  8: "G♯",
+  9: "A",
+  10: "A♯",
+  11: "B"
+}
+const mode = {
+  0: "Major",
+  1: "Minor"
+}
 export default function Spotify() {
   const { data: spotify, mutate, isLoading: loading } = useSWR("/api/spotify", fetcher)
   const [color, setColor] = useState("#FFFFFF")
   const [mutedColor, setMutedColor] = useState("#FFFFFF")
   const [lightMutedColor, setLightColor] = useState("#000000")
-  const [previewPlaying, setPreviewPlaying] = useState(false)
+  const [previewPlaying, setPreviewPlaying] = useState<boolean>(false)
+  const [ open, setOpen ] = useState<boolean>(false);
   const player = useRef<any>()
+  const queue = spotify?.queue
   const timeAgo = new TimeAgo('en-US')
-
+  const percentage = (num:number) => {
+    if(spotify?.artist.includes("Taylor Swift")) return 0;
+    return Number((num / 1) * 100)
+  }
   const previewPlay = async () => {
     if (!player.current) return;
     if (player.current.paused) {
@@ -62,7 +86,6 @@ export default function Spotify() {
       player.current.currentTime = 0;
       setPreviewPlaying(false);
     }
-
   }
   const addSong = async () => {
     const inpt = prompt("Song name");
@@ -97,14 +120,18 @@ export default function Spotify() {
     mutate()
   }, [spotify ? spotify.progress : spotify])
 
-  if(loading) return (
+  /*if(loading) return (
     <div className="h-screen w-full flex flex-col justify-center items-center">
       <div className="loading loading-spinner loading-lg"></div>
     </div>
-  )
+  )*/
 
-  return (<Layout>
-    <div className="overflow-hidden flex flex-col w-full bg-[#1b1b1b]" style={{
+  return (loading?(
+    <div className="h-screen w-full flex flex-col justify-center items-center overflow-hidden">
+      <div className="loading loading-spinner loading-lg" id="current"></div>
+    </div>
+  ):(<Layout>
+    <div className="overflow-hidden h-screen flex flex-col w-full bg-[#1b1b1b]" style={{
       'accentColor': color,
       // overflow: 'hidden',
       backgroundColor: "#1b1b1b"
@@ -148,6 +175,43 @@ export default function Spotify() {
               </div>
             </div>
                 </div>*/}
+          <AnimatePresence>
+          {open&&(
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className={`bg-[#1b1b1b]/75 transition-all p-3 z-[55] fixed w-full h-screen backdrop-blur-lg`}>
+              <div onClick={() => setOpen(false)} className="p-4 flex w-full justify-end items-center"><p className="text-xl font-black">X</p></div>
+              <div className="flex items-center gap-x-2">
+                <Image width="100" height="100" src={spotify?.albumImageUrl} alt="Album Cover" className="rounded"/>
+                <div className="flex flex-col justify-center p-2">
+                  <p className="text-xl font-black">{spotify?.title}</p>
+                  <p className="font-medium">{spotify.artist}</p>
+                  <div className="badge badge-accent">{Number(spotify?.info.tempo).toFixed()} bpm</div>
+                </div>
+              </div>
+              <div className="p-4">
+                <p className="text-xl font-bold">Song Info</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-2">
+                  <div className="flex flex-col justify-center items-center text-center p-3">
+                    <p className="text-lg font-bold">Key</p>
+                    <p className="text-xl font-black">{keys[spotify?.info.key === -1?"none":spotify?.info.key]}</p>
+                  </div>
+                  <div className="flex flex-col justify-center items-center text-center p-3">
+                    <p className="text-lg font-bold">Energy</p>
+                    <p className="text-xl font-black">{percentage(spotify?.info.energy).toFixed()}%</p>
+                  </div>
+                  <div className="flex flex-col justify-center items-center text-center p-3">
+                    <p className="text-lg font-bold">Danceability</p>
+                    <p className="text-xl font-black">{percentage(spotify?.info.danceability).toFixed()}%</p>
+                  </div>
+                  <div className="flex flex-col justify-center items-center text-center p-3">
+                    <p className="text-lg font-bold">Loudness</p>
+                    <p className="text-xl font-black">{Math.floor(spotify?.info.loudness).toFixed()}db</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+          </AnimatePresence>
+
           <motion.ul layoutScroll className="flex flex-col w-full h-screen bg-[#1b1b1b] overflow-hidden scroll-smooth justify-center items-center">
             <div className="fixed top-0 z-[60] p-3 flex items-center justify-end w-full">
               {/*<p className="text-xl font-black">Queue</p>*/}
@@ -155,7 +219,7 @@ export default function Spotify() {
             </div>
             {/*<div className="pt-20"></div>*/}
             <AnimatePresence mode="sync" initial={true}>
-              {spotify?.queue.map((q: any) => (
+              {queue.map((q: any) => (
                 <motion.li
                   layout
                   initial={{ opacity: 0.5 }}
@@ -180,7 +244,7 @@ export default function Spotify() {
                       </motion.div>
                     </AnimatePresence>
                   </div>
-                  <div className="drop-shadow-xl px-2 flex flex-col justify-center w-full truncate">
+                  <div onClick={() => { q.current?setOpen(true):setOpen(false); }} className={q?.current?"drop-shadow-xl px-2 flex flex-col justify-center w-full truncate cursor-pointer":"drop-shadow-xl px-2 flex flex-col justify-center w-full truncate"}>
                     <p className="w-full text-lg font-black">{q?.title}</p>
                     <p className="w-full text-md font-medium">{q?.artist}</p>
                     <AnimatePresence mode="sync">
@@ -234,5 +298,5 @@ export default function Spotify() {
             color: ${mutedColor};
           }
         `}</style>
-  </Layout>)
+  </Layout>))
 }
