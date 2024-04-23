@@ -211,7 +211,13 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
   const songInf = await getSongInfo(song.item.id);
   const songInfo = await songInf.json();
   return NextResponse.json({
-    profile,
+    profile: {
+      display_name: profile.display_name,
+      external_urls: profile.external_urls,
+      images: profile.images,
+      followers: profile.followers,
+      id: profile.id
+    },
     top: {
       artists,
       tracks
