@@ -74,6 +74,17 @@ export const getTop = async (type: string) => {
     }
   })
 }
+
+export const getSongInfo = async (song: string) => {
+  const { access_token } = await getAccessToken();
+
+  return fetch("https://api.spotify.com/v1/audio-features/" + song, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+}
+
 export const getNowPlaying = async () => {
   const { access_token } = await getAccessToken();
 
@@ -197,12 +208,17 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
   const duration = song.item.duration_ms;
   const progress = song.progress_ms
   const preview = song.item.preview_url
-  
+  const songInf = await getSongInfo(song.item.id);
+  const songInfo = await songInf.json();
   return NextResponse.json({
     profile,
     top: {
       artists,
       tracks
+    },
+    info: {
+      beta: true,
+      ...songInfo
     },
     album,
     albumImageUrl,
