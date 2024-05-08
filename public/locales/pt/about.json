@@ -1,6 +1,6 @@
 {
     "title": "Sobre mim",
-    "description": "Sou Igor, tenho {{age}} de idade, trabalho com programação e algumas coisas.\nAtualmente moro no Estado de São Paulo, numa cidade pequena.",
+    "description": "Sou Igor, tenho {{age}} de idade, trabalho com programação e algumas coisas.\nAtualmente moro no Estado de São Paulo, numa cidade pequena. | Contact e-mail: figueiredoigor325@gmail.com",
     "listen": "Escutar",
     "projects": "Projetos"
 }
