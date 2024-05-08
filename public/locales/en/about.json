@@ -1,6 +1,6 @@
 {
     "title": "About me",
-    "description": "I'm Igor, I'm {{age}} years old, I work with coding and some other things.\nI'm Brazilian 👍",
+    "description": "I'm Igor, I'm {{age}} years old, I work with coding and some other things.\nI'm Brazilian 👍 | Contact e-mail: figueiredoigor325@gmail.com",
     "listen": "Listen",
     "projects": "Projects"
 }
