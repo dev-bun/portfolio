@@ -70,7 +70,7 @@ export default function Spotify() {
             <ul className="flex flex-col justify-center overflow-scroll">
                 {spotify?.top.artists.map((art: any) => (
                     <motion.li key={art.name} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} onClick={() => window.open(art.url)} className="p-2 flex items-center">
-                        <Image className="rounded-full" style={{ width: 80, height: 80 }} src={art.avatar} alt={`${art.name}'s Avatar`} height="80" width="80"/>
+                        <Image className="rounded-full" style={{ objectFit: 'cover', width: 80, height: 80 }} src={art.avatar} alt={`${art.name}'s Avatar`} height="80" width="80"/>
                         <div className="flex flex-col p-2">
                             <p className="text-lg font-black">{art.name}</p>
                         </div>
