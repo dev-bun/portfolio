@@ -68,7 +68,7 @@ export default function Spotify() {
         <div className="p-4">
             <p className="text-lg font-black">Top listened artists</p>
             <ul className="flex flex-col justify-center overflow-scroll">
-                {spotify?.top.artists.slice(0, 8).map((art: any) => (
+                {spotify?.top.artists.map((art: any) => (
                     <motion.li key={art.name} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} onClick={() => window.open(art.url)} className="p-2 flex items-center">
                         <Image className="rounded-full" style={{ width: 80, height: 80 }} src={art.avatar} alt={`${art.name}'s Avatar`} height="80" width="80"/>
                         <div className="flex flex-col p-2">
@@ -76,7 +76,7 @@ export default function Spotify() {
                         </div>
                     </motion.li>
                 ))}
-                <li className="text-lg font-bold p-3">More {spotify?.top.artists.length-8}...</li>
+              {/*<li className="text-lg font-bold p-3">More {spotify?.top.artists.length-8}...</li>*/}
             </ul>
             <hr className="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10"/>
             <p className="text-lg font-black">Top listened songs</p>
