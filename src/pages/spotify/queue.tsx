@@ -69,6 +69,7 @@ export default function Spotify() {
   const [lightMutedColor, setLightColor] = useState("#000000")
   const [previewPlaying, setPreviewPlaying] = useState<boolean>(false)
   const [ open, setOpen ] = useState<boolean>(false);
+  const [ lasthour, setLastHour ] = useState<any>()
   const player = useRef<any>()
   const queue = spotify?.queue
   const timeAgo = new TimeAgo('en-US')
@@ -115,6 +116,9 @@ export default function Spotify() {
   }, [spotify])
   
   useEffect(function () {
+    var lasthr = new Date();
+    lasthr.setHours(lasthr.getHours()-1)
+    setLastHour(lasthr)
     /*const intervalId = setInterval(() => mutate(), 1000)
     return () => clearInterval(intervalId);*/
     mutate()
