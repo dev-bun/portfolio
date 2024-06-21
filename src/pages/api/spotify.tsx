@@ -154,7 +154,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
   var historyItem: any = []
  // console.log(history)
   var lasthour = new Date();
-  lasthour.setHour(lasthour.getHour()-1)
+  lasthour.setHours(lasthour.getHours()-1)
   await history.filter((q: any) => { return new Date(q.played_at).getTime() <= lasthour.getTime();}).forEach(async (q: any) => {
     // console.log(q.track.album.images)
     if (history.length < 1) return;
