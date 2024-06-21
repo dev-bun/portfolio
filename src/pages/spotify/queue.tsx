@@ -219,7 +219,7 @@ export default function Spotify() {
             </div>
             {/*<div className="pt-20"></div>*/}
             <AnimatePresence mode="sync" initial={true}>
-              {queue.map((q: any) => (
+              {queue.filter((q: any) => { return new Date(q.played_at).getTime() >= lasthour.getTime();}).map((q: any) => (
                 <motion.li
                   layout
                   initial={{ opacity: 0.5 }}
