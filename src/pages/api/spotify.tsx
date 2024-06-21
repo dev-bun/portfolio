@@ -106,8 +106,7 @@ export const getQueue = async () => {
 export const getHistory = async () => {
   const { access_token } = await getAccessToken();
   const now = new Date()
-  const then = new Date(now.getFullYear(), now.getMonth(), now.getDay(), now.getHours(), 59, 59, 0)
-  return fetch(HISTORY_ENDPOINT, {
+  return fetch(HISTORY_ENDPOINT + "?after="+Math.floor(Date.now()/1000), {
     headers: {
       Authorization: `Bearer ${access_token}`,
     }
