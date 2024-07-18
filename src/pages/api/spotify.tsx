@@ -106,7 +106,7 @@ export const getQueue = async () => {
 export const getHistory = async () => {
   const { access_token } = await getAccessToken();
   const now = new Date()
-  return fetch(HISTORY_ENDPOINT + "?after="+Math.floor(Date.now()/1000), {
+  return fetch(HISTORY_ENDPOINT + "?limit=10", {
     headers: {
       Authorization: `Bearer ${access_token}`,
     }
@@ -211,6 +211,23 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
   const preview = song.item.preview_url
   const songInf = await getSongInfo(song.item.id);
   const songInfo = await songInf.json();
+  const queueInfo: any[] = [
+    ...historyItem,
+    {
+      album,
+      albumImageUrl,
+      artist,
+      isPlaying,
+      songUrl,
+      title,
+      duration,
+      progress,
+      preview,
+      current: true,
+      playedAt: song.timestamp
+    },
+    ...item
+  ].filter((v, i, a) => a.findIndex((t) => t.track.id === v.track.id) === i);
   return NextResponse.json({
     profile: {
       display_name: profile.display_name,
@@ -236,22 +253,6 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse<Song
     duration,
     progress,
     preview,
-    queue: [
-      ...historyItem,
-      {
-        album,
-        albumImageUrl,
-        artist,
-        isPlaying,
-        songUrl,
-        title,
-        duration,
-        progress,
-        preview,
-        current: true,
-        playedAt: song.timestamp
-      },
-      ...item
-    ],
+    queue: queueInfo.slice(0, 10),
   }, { status: 200 });
 };
