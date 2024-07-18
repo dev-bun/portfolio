@@ -135,14 +135,14 @@ export default function Spotify() {
       <div className="loading loading-spinner loading-lg" id="current"></div>
     </div>
   ):(<Layout>
-    <div className="overflow-hidden h-screen flex flex-col w-full bg-[#1b1b1b]" style={{
+    <div className="flex flex-col w-full bg-[#1b1b1b]" style={{
       'accentColor': color,
       // overflow: 'hidden',
       backgroundColor: "#1b1b1b"
     }}>
       <div className={spotify?.isPlaying ? `p-5 w-full fixed z-[50] blur-3xl transition-all` : "p-5 w-full fixed z-[50] blur-3xl transition-all bg-[#1b1b1b]"} style={{ backgroundColor: `${color}` }}></div>
       <div className={spotify?.isPlaying ? `bottom-0 p-5 w-full fixed z-[50] transition-all blur-xl` : "bottom-0 p-5 w-full fixed z-[50] transition-all blur-xl"} style={{ backgroundColor: `#1b1b1b` }}></div>
-      <div className={`w-full bg-[${mutedColor}]/10 backdrop-blur-xl p-4 sticky top-0 z-[60]`}><Image width="130" height="130" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"} /></div>
+      <div className={`w-full bg-[${mutedColor}]/10 backdrop-blur-xl p-4 fixed top-0 z-[60]`}><Image width="130" height="130" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"} /></div>
       <div className="w-full p-4"></div>
       <AnimatePresence mode="sync">
         {spotify?.isPlaying ? (
@@ -277,7 +277,7 @@ export default function Spotify() {
     </div>
     <style jsx>{`
           * {
-            overflow: hidden;
+            /* overflow: hidden; */
             transition-property: all;
             transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
             transition-duration: 150ms;
