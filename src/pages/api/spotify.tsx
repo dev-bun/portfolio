@@ -36,7 +36,7 @@ export type SongInfo = {
     preview?: string;
 };
 
-const getAccessToken = async () => {
+export const getAccessToken = async () => {
     const params = new URLSearchParams({
         'grant_type': 'refresh_token',
         'refresh_token': refresh_token as string,

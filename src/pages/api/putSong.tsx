@@ -1,14 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { NextResponse } from "next/server"
-import { getQueue, getSong, putSong } from "./spotify";
+import { getAccessToken, getQueue, getSong, putSong } from "./spotify";
 
 export const runtime = 'edge'
 
 export default async function PutSong(req: NextApiRequest, res: NextApiResponse) {
     if (req.method?.toLowerCase() !== "post") return NextResponse.json({ code: 401, text: "Unauthorized" }, { status: 401 });
+    const { access_token } = await getAccessToken();
     const url = new URL(req.url as string)
-    const que = await getQueue();
-    const son = await getSong(url.searchParams.get("song") as string)
+    const que = await getQueue(access_token);
+    const son = await getSong(url.searchParams.get("song") as string, access_token)
     const music = await son.json()
     const { queue } = await que.json()
     if (son.status === 204 || son.status > 400) return NextResponse.json({
@@ -28,7 +29,7 @@ export default async function PutSong(req: NextApiRequest, res: NextApiResponse)
     const q = queue.find((q: any) => q.uri === music.tracks.items[0].uri)
 
     //:console.log(q.uri)
-    const song = await putSong(music?.tracks.items[0].uri)
+    const song = await putSong(music?.tracks.items[0].uri, access_token)
     const songInfo = await song.text();
     console.log(songInfo)
     if (song.status !== 204) {
