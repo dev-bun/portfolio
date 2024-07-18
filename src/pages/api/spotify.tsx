@@ -143,7 +143,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 current: false,
                 playedAt: 0,
             })),
-        ].filter((v, i, a) => a.findIndex(t => t.title === v.title) === i);
+        ].filter((v, i, a) => a.findIndex(t => t.title === v.title && t.artist === v.artist) === i);
 
         const top = {
             artists: topArtists.items.map((q: any) => ({
@@ -169,6 +169,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 id: profile.id,
             },
             top,
+            info: {
+                tempo: 0,
+                key: -1,
+                energy: 0,
+                danceability: 0,
+                loudness: 0
+            },
             ...songInfo,
             queue: queueInfo,
         }, {

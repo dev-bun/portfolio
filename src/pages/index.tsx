@@ -81,7 +81,7 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
             </div>
             <div className="w-full flex flex-col p-2 justify-center">
               <p className="w-full text-xl font-black">Metal, Caralho</p>
-              <p className="w-full font-medium">igorwastaken; Alice Dalsasso</p>
+              <p className="w-full font-medium">igorwastaken</p>
             </div>
           </div>)}
         </div>
