@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextResponse } from 'next/server';
 export const runtime = 'edge';
-
 const {
     SPOTIFY_CLIENT_ID: client_id,
     SPOTIFY_CLIENT_SECRET: client_secret,
@@ -36,6 +35,26 @@ export type SongInfo = {
     preview?: string;
 };
 
+export type SongItem = {
+    title?: string;
+    artist?: string;
+    isPlaying?: boolean;
+    album?: string;
+    albumImageUrl?: string;
+    duration?: number;
+    songUrl?: string;
+    progress?: number;
+    preview?: string;
+    info?: SongTempoInfo;
+}
+export type SongTempoInfo = {
+    tempo?: number;
+    key?: number;
+    energy?: number;
+    danceability?: number;
+    loudness?: number;
+}
+
 export const getAccessToken = async () => {
     const params = new URLSearchParams({
         'grant_type': 'refresh_token',
@@ -60,6 +79,7 @@ const fetchSpotify = async (endpoint: string, access_token: string) => {
             Authorization: `Bearer ${access_token}`,
         },
     });
+    if(response.status !== 200) return {};
     return response.json();
 };
 
@@ -96,6 +116,7 @@ export const putSong = async (song: string, access_token: string) => {
     });
 };
 
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse<SongInfo>) {
     try {
         const { access_token } = await getAccessToken();
@@ -108,11 +129,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             getQueue(access_token),
             getHistory(access_token),
         ]);
+        // console.log(profile, topArtists, topTracks, nowPlaying, queue, history)
 
         const song = await nowPlaying;
         const isPlaying = song.is_playing;
 
-        const songInfo = {
+        const songInfo = isPlaying?{
             title: song.item?.name,
             artist: song.item?.artists.map((_artist: any) => _artist.name).join(', '),
             album: song.item?.album.name,
@@ -123,7 +145,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             preview: song.item?.preview_url,
             isPlaying,
             current: true
-        };
+        }: {isPlaying};
 
         const queueInfo = [
             ...history.items.map((q: any) => ({
@@ -182,6 +204,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             status: 200
         });
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch data from Spotify' }, { status: 500 });
+        console.log(error)
+        return NextResponse.json({ error: 'Failed to fetch data from Spotify', stack: error }, { status: 500 });
     }
 }
