@@ -33,6 +33,7 @@ export type SongInfo = {
     queue?: Queue[];
     history?: Queue[];
     preview?: string;
+    playedAt?: string;
 };
 
 export type SongItem = {
