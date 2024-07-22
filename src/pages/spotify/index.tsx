@@ -3,9 +3,7 @@ import useSWR from "swr"
 const fetcher = (url: any) => fetch(url).then((r: any) => r.json())
 import Vibrant from 'node-vibrant'
 import Image from "next/image"
-import { getProfile } from "../api/spotify"
 import { AnimatePresence, motion } from "framer-motion"
-import TextSlider from "@/components/Sliding"
 import { useRouter } from "next/router"
 
 export default function Spotify() {
@@ -14,7 +12,6 @@ export default function Spotify() {
   const [color, setColor] = useState("#FFFFFF")
   const [mutedColor, setMutedColor] = useState("#FFFFFF")
   const [lightMutedColor, setLightColor] = useState("#000000")
-  const [ profile, setProfile ] = useState<any>()
 
   useEffect(function () {
     /*if(window) {

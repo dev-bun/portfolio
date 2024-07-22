@@ -8,11 +8,10 @@ export default async function PutSong(req: NextApiRequest, res: NextApiResponse)
     if (req.method?.toLowerCase() !== "post") return NextResponse.json({ code: 401, text: "Unauthorized" }, { status: 401 });
     const { access_token } = await getAccessToken();
     const url = new URL(req.url as string)
-    const que = await getQueue(access_token);
-    const son = await getSong(url.searchParams.get("song") as string, access_token)
-    const music = await son.json()
-    const { queue } = await que.json()
-    if (son.status === 204 || son.status > 400) return NextResponse.json({
+    const { queue } = await getQueue(access_token);
+    const music = await getSong(url.searchParams.get("song") as string, access_token)
+    
+    if (!music) return NextResponse.json({
         code: 500,
         text: 'Interval Server Error.',
         debug: url.searchParams.get("debug") ? { music: music, error: "Failed to fetch songs" } : { status: "Failed to fetch songs" }
