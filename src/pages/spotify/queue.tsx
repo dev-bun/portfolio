@@ -20,7 +20,7 @@ export default function Spotify() {
   const [lightMutedColor, setLightColor] = useState("#000000")
   const [open, setOpen] = useState<boolean>(false);
   const [lasthour, setLastHour] = useState<any>()
-  const queue = spotify?.queue.filter((v: any, i: any, a: any) => a.findIndex((t:any) => t.title === v.title && t.artist === v.artist) === i);
+  const queue = spotify?.queue.length > 0 ? spotify?.queue : [];
   const timeAgo = new TimeAgo('en-US')
 
   const addSong = async () => {

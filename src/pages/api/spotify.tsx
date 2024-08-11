@@ -76,7 +76,7 @@ const setCachedData = (key: string, data: any) => {
 
 const LASTFM_API_KEY = process.env.LASTFM_API_KEY;
 const LASTFM_USERNAME = process.env.LASTFM_USERNAME;
-const LASTFM_RECENT_TRACKS_ENDPOINT = `http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&format=json&limit=1`;
+const LASTFM_RECENT_TRACKS_ENDPOINT = `http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&format=json&limit=10`;
 
 async function fetchLastFmRecentTrack() {
     const response = await fetch(LASTFM_RECENT_TRACKS_ENDPOINT);
@@ -220,8 +220,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 albumImageUrl: q.track.album.images[0].url,
                 current: false,
                 playedAt: new Date(q.played_at).getTime(),
-            })).reverse(),
-            ...trackInfo.filter((q: any) => !q.isPlaying),
+            })).reverse().filter((q: any) => !q.isPlaying),
+            ...trackInfo.reverse().filter((q: any) => !q.isPlaying),
             songInfo,
             ...queue.queue.map((q: any) => ({
                 album: q.album.name,

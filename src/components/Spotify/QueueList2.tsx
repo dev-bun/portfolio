@@ -63,8 +63,8 @@ const QueueList2 = ({
                   exit={{ opacity: 0.5 }}
                   transition={{ type: "tween", layout: {}, duration: 1, delay: 0.5 }}
                   className="justify-center items-center flex p-2 mt-1 w-full backdrop-blur-lg rounded-2xl"
-                  key={q?.title ? q?.title : "DisabledCurrentSong"}
-                  id={q?.current ? "current" : ""}
+                  key={q?.title ? q?.title : "disabled"}
+                  id={q?.current?"current":q?.title}
                 >
                   <div key={q?.album}>
                     <AnimatePresence>
@@ -81,7 +81,7 @@ const QueueList2 = ({
                             width="100"
                             height="100"
                             alt="Song Cover"
-                            src={q.albumImageUrl || "/loading.png"} // Safe fallback for image URL
+                            src={q?.albumImageUrl || "/loading.png"} // Safe fallback for image URL
                           />
                         </div>
                       </motion.div>
@@ -89,7 +89,7 @@ const QueueList2 = ({
                   </div>
                   <div
                     onClick={() => {
-                      q.current ? setOpen(true) : setOpen(false);
+                      q?.current ? setOpen(true) : setOpen(false);
                     }}
                     className={
                       q?.current
@@ -100,7 +100,7 @@ const QueueList2 = ({
                     <p className="w-full text-lg font-black">{q?.title}</p>
                     <p className="w-full text-md font-medium">{q?.artist}</p>
                     <AnimatePresence mode="sync">
-                      {q.current && (
+                      {q?.current && (
                         <motion.div
                           key={q?.current}
                           transition={{ duration: 0.5 }}
@@ -111,7 +111,7 @@ const QueueList2 = ({
                           <progress
                             value={spotify?.progress}
                             max={spotify?.duration}
-                            className={`w-full [&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:transition-all [&::-webkit-progress-value]:duration-500 [&::-webkit-progress-value]:bg-slate-900 [&::-moz-progress-bar]:transition-all [&::-moz-progress-bar]:duration-500 [&::-moz-progress-bar]:bg-slate-100`}
+                            className={`w-full [&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:transition-all [&::-webkit-progress-value]:duration-500 [&::-webkit-progress-value]:opacity-1 [&::-moz-progress-bar]:transition-all [&::-moz-progress-bar]:duration-500 [&::-moz-progress-bar]:bg-slate-100`}
                           ></progress>
                           <div className="flex justify-between">
                             <p className="font-bold">
@@ -155,6 +155,33 @@ const QueueList2 = ({
           <p className="text-2xl font-black">Nothing Playing</p>
         </motion.div>
       )}
+      <style jsx>{`
+          * {
+            /* overflow: hidden; */
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+          }
+          progress::-webkit-progress-value {
+            background-color: ${lightMutedColor};
+          }
+          progress::-webkit-progress-bar {
+            background-color: ${mutedColor};
+          }
+          ::-webkit-progress-value {
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+          }
+          ::-moz-selection {
+            background-color: ${lightMutedColor};
+            color: ${mutedColor};
+          }
+          ::selection {
+            background-color: ${lightMutedColor};
+            color: ${mutedColor};
+          }
+        `}</style>
     </AnimatePresence>
   );
 };
