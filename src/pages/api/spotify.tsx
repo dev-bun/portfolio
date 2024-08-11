@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextResponse } from 'next/server';
+
 export const runtime = 'edge';
 const {
     SPOTIFY_CLIENT_ID: client_id,
@@ -48,6 +49,7 @@ export type SongItem = {
     preview?: string;
     info?: SongTempoInfo;
 }
+
 export type SongTempoInfo = {
     tempo?: number;
     key?: number;
@@ -55,6 +57,22 @@ export type SongTempoInfo = {
     danceability?: number;
     loudness?: number;
 }
+
+// Simple in-memory cache
+const cache: { [key: string]: { data: any; timestamp: number } } = {};
+const CACHE_DURATION = 60 * 1000; // 1 minute
+
+const getCachedData = (key: string) => {
+    const cached = cache[key];
+    if (cached && (Date.now() - cached.timestamp < CACHE_DURATION)) {
+        return cached.data;
+    }
+    return null;
+};
+
+const setCachedData = (key: string, data: any) => {
+    cache[key] = { data, timestamp: Date.now() };
+};
 
 export const getAccessToken = async () => {
     const params = new URLSearchParams({
@@ -71,6 +89,10 @@ export const getAccessToken = async () => {
         body: params,
     });
 
+    if (!response.ok) {
+        throw new Error('Failed to refresh access token');
+    }
+
     return response.json();
 };
 
@@ -80,7 +102,19 @@ const fetchSpotify = async (endpoint: string, access_token: string) => {
             Authorization: `Bearer ${access_token}`,
         },
     });
-    if(response.status !== 200) return {};
+    
+    if (response.status === 401) {
+        throw new Error('Unauthorized: Invalid or expired access token');
+    }
+
+    if (response.status === 429) {
+        throw new Error('Rate limited: Too many requests to Spotify API');
+    }
+
+    if (response.status !== 200) {
+        throw new Error(`Spotify API request failed with status ${response.status}`);
+    }
+
     return response.json();
 };
 
@@ -89,7 +123,17 @@ export const getProfile = async (access_token: string) => {
 };
 
 export const getTop = async (type: string, access_token: string) => {
-    return fetchSpotify(`https://api.spotify.com/v1/me/top/${type}`, access_token);
+    const cacheKey = `top_${type}`;
+    const cachedData = getCachedData(cacheKey);
+
+    if (cachedData) {
+        return cachedData;
+    }
+
+    const data = await fetchSpotify(`https://api.spotify.com/v1/me/top/${type}`, access_token);
+    setCachedData(cacheKey, data);
+
+    return data;
 };
 
 export const getNowPlaying = async (access_token: string) => {
@@ -101,7 +145,7 @@ export const getQueue = async (access_token: string) => {
 };
 
 export const getHistory = async (access_token: string) => {
-    return fetchSpotify(`${HISTORY_ENDPOINT}`, access_token);
+    return fetchSpotify(HISTORY_ENDPOINT, access_token);
 };
 
 export const getSong = async (song: string, access_token: string) => {
@@ -117,7 +161,6 @@ export const putSong = async (song: string, access_token: string) => {
     });
 };
 
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse<SongInfo>) {
     try {
         const { access_token } = await getAccessToken();
@@ -130,12 +173,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             getQueue(access_token),
             getHistory(access_token),
         ]);
-        // console.log(profile, topArtists, topTracks, nowPlaying, queue, history)
 
         const song = await nowPlaying;
         const isPlaying = song.is_playing;
 
-        const songInfo = isPlaying?{
+        const songInfo = isPlaying ? {
             title: song.item?.name,
             artist: song.item?.artists.map((_artist: any) => _artist.name).join(', '),
             album: song.item?.album.name,
@@ -146,7 +188,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             preview: song.item?.preview_url,
             isPlaying,
             current: true
-        }: {isPlaying};
+        } : { isPlaying };
 
         const queueInfo = [
             ...history.items.map((q: any) => ({
@@ -182,7 +224,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 url: q.external_urls.spotify,
             })),
         };
-        
+
         return NextResponse.json({
             profile: {
                 display_name: profile.display_name,
@@ -204,8 +246,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         }, {
             status: 200
         });
-    } catch (error) {
-        console.log(error)
-        return NextResponse.json({ error: 'Failed to fetch data from Spotify', stack: error }, { status: 500 });
+    } catch (error: any) {
+        console.log(error.message);
+
+        let errorMessage = 'Failed to fetch data from Spotify';
+        if (error.message.includes('Unauthorized')) {
+            errorMessage = 'Spotify API authentication failed';
+        } else if (error.message.includes('Rate limited')) {
+            errorMessage = 'Too many requests: Rate limited by Spotify API';
+        }
+
+        return NextResponse.json({ error: errorMessage }, { status: 500 });
     }
 }
