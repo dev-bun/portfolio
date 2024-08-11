@@ -33,18 +33,16 @@ export default function Spotify() {
 
   useEffect(function () {
     if (document) {
-      document.getElementById("current")?.scrollIntoView({ inline: "center", block: "center", behavior: "smooth" })
+      document.getElementById(queue.filter((q: any) => q?.isPlaying)[0].title)?.scrollIntoView({ inline: "center", block: "center", behavior: "smooth" })
     }
-    async function getCol() {
-      if (spotify?.isPlaying) {
-        const col = await Vibrant.from(spotify?.albumImageUrl).getPalette();
+    async function getCol(songs: string) {
+        const col = await Vibrant.from(songs).getPalette();
 
         setColor(col.Muted?.hex.toString() as string)
         setMutedColor(col.DarkMuted?.getHex().toString() as string);
         setLightColor(col.LightMuted?.getHex().toString() as string)
-      }
     }
-    getCol()
+    getCol(spotify?.albumImageUrl)
   }, [spotify])
 
   useEffect(function () {

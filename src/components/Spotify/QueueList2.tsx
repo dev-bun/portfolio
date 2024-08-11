@@ -63,8 +63,8 @@ const QueueList2 = ({
                   exit={{ opacity: 0.5 }}
                   transition={{ type: "tween", layout: {}, duration: 1, delay: 0.5 }}
                   className="justify-center items-center flex p-2 mt-1 w-full backdrop-blur-lg rounded-2xl"
-                  key={q?.title ? q?.title : "disabled"}
-                  id={q?.current?"current":q?.title}
+                  key={q?.title}
+                  id={q?.title}
                 >
                   <div key={q?.album}>
                     <AnimatePresence>
