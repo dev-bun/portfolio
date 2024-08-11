@@ -60,7 +60,7 @@ export type SongTempoInfo = {
 
 // Simple in-memory cache
 const cache: { [key: string]: { data: any; timestamp: number } } = {};
-const CACHE_DURATION = 60 * 1000; // 1 minute
+const CACHE_DURATION = 30 * 1000; // 30 seconds
 
 const getCachedData = (key: string) => {
     const cached = cache[key];
@@ -74,6 +74,17 @@ const setCachedData = (key: string, data: any) => {
     cache[key] = { data, timestamp: Date.now() };
 };
 
+const LASTFM_API_KEY = process.env.LASTFM_API_KEY;
+const LASTFM_USERNAME = process.env.LASTFM_USERNAME;
+const LASTFM_RECENT_TRACKS_ENDPOINT = `http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&format=json&limit=1`;
+
+async function fetchLastFmRecentTrack() {
+    const response = await fetch(LASTFM_RECENT_TRACKS_ENDPOINT);
+    if (!response.ok) {
+        throw new Error('Failed to fetch data from Last.fm');
+    }
+    return response.json();
+}
 export const getAccessToken = async () => {
     const params = new URLSearchParams({
         'grant_type': 'refresh_token',
@@ -102,7 +113,7 @@ const fetchSpotify = async (endpoint: string, access_token: string) => {
             Authorization: `Bearer ${access_token}`,
         },
     });
-    
+
     if (response.status === 401) {
         throw new Error('Unauthorized: Invalid or expired access token');
     }
@@ -173,7 +184,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             getQueue(access_token),
             getHistory(access_token),
         ]);
-
+        const lastFmData = await fetchLastFmRecentTrack();
+        const recentTrack = lastFmData.recenttracks.track//.reverse(); // Assuming the most recent track is at index 0
+        const trackInfo = recentTrack.filter((q: any) => q).map((q: any, i: any) => {
+            return {
+                title: q.name,
+                artist: q.artist['#text'] ?? "Unknown",
+                album: q.album['#text'] ?? "Unknown",
+                albumImageUrl: q.image.find((img: any) => img.size === 'large')['#text'],
+                isPlaying: q['@attr']?.nowplaying === 'true',
+                playedAt: q.date ? new Date(q.date['#text']).getTime() : null,
+            }
+        }).filter((v: any, i: any, a: any) => a.findIndex((t: any) => t.title === v.title && t.artist === v.artist) === i);
         const song = await nowPlaying;
         const isPlaying = song.is_playing;
 
@@ -199,6 +221,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 current: false,
                 playedAt: new Date(q.played_at).getTime(),
             })).reverse(),
+            ...trackInfo.filter((q: any) => !q.isPlaying),
             songInfo,
             ...queue.queue.map((q: any) => ({
                 album: q.album.name,
@@ -208,7 +231,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 current: false,
                 playedAt: 0,
             })),
-        ].filter((v, i, a) => a.findIndex(t => t.title === v.title && t.artist === v.artist) === i);
+        ]//.filter((v, i, a) => a.findIndex(t => t.title === v.title && t.artist === v.artist) === i);
 
         const top = {
             artists: topArtists.items.map((q: any) => ({
@@ -242,6 +265,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 loudness: 0
             },
             ...songInfo,
+            lastFm: trackInfo,
             queue: queueInfo,
         }, {
             status: 200

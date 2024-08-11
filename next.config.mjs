@@ -32,7 +32,7 @@ const nextConfig = {
         pathname: "/images/*"
       }
     ]*/
-    domains: ["i.scdn.co", "image-cdn-ak.spotifycdn.com", "assets-global.website-files.com", "cdn.discordapp.com", "raw.githubusercontent.com"]
+    domains: ["lastfm.freetls.fastly.net", "i.scdn.co", "image-cdn-ak.spotifycdn.com", "assets-global.website-files.com", "cdn.discordapp.com", "raw.githubusercontent.com"]
   }
 };
 

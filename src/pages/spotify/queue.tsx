@@ -8,6 +8,7 @@ import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import Head from "next/head";
 import QueueList from "@/components/Spotify/QueueList";
+import QueueList2 from "@/components/Spotify/QueueList2";
 
 TimeAgo.addDefaultLocale(en)
 
@@ -19,7 +20,7 @@ export default function Spotify() {
   const [lightMutedColor, setLightColor] = useState("#000000")
   const [open, setOpen] = useState<boolean>(false);
   const [lasthour, setLastHour] = useState<any>()
-  const queue = spotify?.queue
+  const queue = spotify?.queue.filter((v: any, i: any, a: any) => a.findIndex((t:any) => t.title === v.title && t.artist === v.artist) === i);
   const timeAgo = new TimeAgo('en-US')
 
   const addSong = async () => {
@@ -74,7 +75,7 @@ export default function Spotify() {
       <div className={spotify?.isPlaying ? `bottom-0 p-5 w-full fixed z-[50] transition-all blur-xl` : "bottom-0 p-5 w-full fixed z-[50] transition-all blur-xl"} style={{ backgroundColor: `#1b1b1b` }}></div>
       <div className={`w-full bg-[${mutedColor}]/10 backdrop-blur-xl p-4 fixed top-0 z-[60]`}><Image width="130" height="130" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"} /></div>
       <div className="w-full p-10"></div>
-      <QueueList
+      <QueueList2
         queue={queue}
         timeAgo={timeAgo}
         open={open}

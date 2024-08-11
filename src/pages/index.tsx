@@ -47,12 +47,12 @@ const About = function (_props: InferGetStaticPropsType<typeof getStaticProps>) 
           <p className="text-2xl font-black">{t("title")}</p>
           <p className="ml-1">{t("description", { age: 15 })}</p>
         </div>
-        <div className="select-none hover:scale-[0.95] scale-1 transition-all hover:bg-[#1DB954]/50 col-span-1 flex flex-col bg-[#1DB954] text-slate-200 p-3 rounded-xl overflow-hidden text-ellipsis whitespace-nowrap">
+        {/*<div className="select-none hover:scale-[0.95] scale-1 transition-all hover:bg-[#1DB954]/50 col-span-1 flex flex-col bg-[#1DB954] text-slate-200 p-3 rounded-xl overflow-hidden text-ellipsis whitespace-nowrap">
            <div className="py-2"><Image width="100" height="100" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"} /></div>
            <div className="mt-1 pb-2 flex">
             
            </div>
-        </div>
+        </div>*/}
         <div onClick={() => router.push("/spotify")} className="select-none hover:scale-[0.95] scale-1 transition-all hover:bg-[#1DB954]/50 col-span-1 flex flex-col bg-[#1DB954] text-slate-200 p-3 rounded-xl overflow-hidden text-ellipsis whitespace-nowrap">
           <div className="py-2"><Image width="100" height="100" alt="Spotify logo" src={"/Spotify_Logo_RGB_White.png"} /></div>
           {spotify?.isPlaying ? (<div className="mt-1 pb-2 flex">

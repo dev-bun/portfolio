@@ -54,7 +54,7 @@ const QueueList2 = ({
                 +
               </button>
             </div>
-            <AnimatePresence mode="sync" initial={true}>
+            <AnimatePresence mode="sync">
               {queue.map((q: any, index: number) => (
                 <motion.li
                   layout
@@ -63,7 +63,7 @@ const QueueList2 = ({
                   exit={{ opacity: 0.5 }}
                   transition={{ type: "tween", layout: {}, duration: 1, delay: 0.5 }}
                   className="justify-center items-center flex p-2 mt-1 w-full backdrop-blur-lg rounded-2xl"
-                  key={index} // Using index as a fallback key
+                  key={q?.title ? q?.title : "DisabledCurrentSong"}
                   id={q?.current ? "current" : ""}
                 >
                   <div key={q?.album}>
