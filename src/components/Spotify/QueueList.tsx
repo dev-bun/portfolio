@@ -4,7 +4,7 @@ import Image from "next/image";
 import prettyMilliseconds from "pretty-ms";
 
 export interface QueueInterface {
-  queue: any;
+  queue: any[]; // assuming queue is an array of objects
   timeAgo: any;
   open: boolean;
   setOpen: Function;
@@ -15,10 +15,10 @@ export interface QueueInterface {
 }
 
 export const percentage = (num: number) => {
-  return Number((num / 1) * 100)
+  return Number((num / 1) * 100);
 }
 
-const QueueList = ({ queue, timeAgo, open, setOpen, spotify, lightMutedColor, mutedColor, addSong }: QueueInterface) => {
+const QueueList = ({ queue = [], timeAgo, open, setOpen, spotify, lightMutedColor, mutedColor, addSong }: QueueInterface) => {
   return (
     <AnimatePresence mode="sync">
       {queue.length > 0 ? (
@@ -28,21 +28,18 @@ const QueueList = ({ queue, timeAgo, open, setOpen, spotify, lightMutedColor, mu
             : "flex flex-col w-full h-screen bg-[#1b1b1b] overflow-scroll scroll-smooth justify-center items-center"
           }>
             <div className="fixed top-0 z-[60] p-3 flex items-center justify-end w-full">
-              {/*<p className="text-xl font-black">Queue</p>*/}
               <button className="m-2 rounded-xl py-1 px-2 bg-green-900 text-xl font-black text-center hover:opacity-[0.5] transition-all" style={{ backgroundColor: mutedColor, color: lightMutedColor }} onClick={addSong}>+</button>
             </div>
-            {/*<div className="pt-20"></div>*/}
             <AnimatePresence mode="sync" initial={true}>
-              {queue.map((q: any) => (
+              {queue.map((q: any, index: number) => (
                 <motion.li
                   layout
                   initial={{ opacity: 0.5 }}
                   animate={q?.current ? { opacity: 1 } : { opacity: 0.5 }}
                   exit={{ opacity: 0.5 }}
                   transition={{ type: "tween", layout: {}, duration: 1, delay: 0.5 }}
-                  // onTransitionEndCapture={() => { document.getElementById("current")?.scrollIntoView({ inline: 'center', block: 'center', behavior: 'smooth' }) }}
                   className="justify-center items-center flex p-2 mt-1 w-full backdrop-blur-lg rounded-2xl"
-                  key={q?.title ? q?.title : "DisabledCurrentSong"}
+                  key={index}
                   id={q?.current ? "current" : ""}
                 >
                   <div key={q?.album}>
@@ -53,7 +50,6 @@ const QueueList = ({ queue, timeAgo, open, setOpen, spotify, lightMutedColor, mu
                         exit={{ opacity: 0 }}>
                         <div className="">
                           <Image placeholder="blur" blurDataURL={"/loading.png"} className="z-10 rounded" width="100" height="100" alt="Song Cover" src={q.albumImageUrl ? q?.albumImageUrl : "/loading.png"} />
-                          {/*<Image placeholder="blur" blurDataURL={"/loading.png"} className="blur-xl rounded" width="100" height="100" alt="Song Cover" src={q?.albumImageUrl}/>*/}
                         </div>
                       </motion.div>
                     </AnimatePresence>
@@ -62,10 +58,12 @@ const QueueList = ({ queue, timeAgo, open, setOpen, spotify, lightMutedColor, mu
                     <p className="w-full text-lg font-black">{q?.title}</p>
                     <p className="w-full text-md font-medium">{q?.artist}</p>
                     <AnimatePresence mode="sync">
-                      {q.current && (<motion.div key={q?.current} transition={{ duration: 0.5 }} initial={{ height: 0, width: "0%", opacity: 0 }} animate={{ height: "50%", width: "100%", opacity: 1 }} exit={{ height: 0, width: "0%", opacity: 0 }}>
-                        <progress value={spotify?.progress} max={spotify?.duration} className={`w-full [&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:transition-all [&::-webkit-progress-value]:duration-500 [&::-webkit-progress-value]:bg-slate-900 [&::-moz-progress-bar]:transition-all [&::-moz-progress-bar]:duration-500 [&::-moz-progress-bar]:bg-slate-100`}></progress>
-                        <div className="flex justify-between"><p className="font-bold">{prettyMilliseconds(spotify?.progress, { colonNotation: true, secondsDecimalDigits: 0 })}</p><p className="font-bold">{prettyMilliseconds(spotify?.duration, { colonNotation: true, secondsDecimalDigits: 0 })}</p></div>
-                      </motion.div>)}
+                      {q.current && (
+                        <motion.div key={q?.current} transition={{ duration: 0.5 }} initial={{ height: 0, width: "0%", opacity: 0 }} animate={{ height: "50%", width: "100%", opacity: 1 }} exit={{ height: 0, width: "0%", opacity: 0 }}>
+                          <progress value={spotify?.progress} max={spotify?.duration} className={`w-full [&::-webkit-progress-bar]:rounded-lg h-2 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:transition-all [&::-webkit-progress-value]:duration-500 [&::-webkit-progress-value]:bg-slate-900 [&::-moz-progress-bar]:transition-all [&::-moz-progress-bar]:duration-500 [&::-moz-progress-bar]:bg-slate-100`}></progress>
+                          <div className="flex justify-between"><p className="font-bold">{prettyMilliseconds(spotify?.progress, { colonNotation: true, secondsDecimalDigits: 0 })}</p><p className="font-bold">{prettyMilliseconds(spotify?.duration, { colonNotation: true, secondsDecimalDigits: 0 })}</p></div>
+                        </motion.div>
+                      )}
                       {!q?.current && q?.playedAt > 1 && (
                         <motion.div>
                           <p className="w-full text-sm font-regular text-left">{q?.current ? "Playing since" : "Played"} {timeAgo?.format(q?.playedAt)}</p>
@@ -83,7 +81,8 @@ const QueueList = ({ queue, timeAgo, open, setOpen, spotify, lightMutedColor, mu
           <p className="text-2xl font-black">Nothing Playing</p>
         </motion.div>
       )}
-    </AnimatePresence>);
+    </AnimatePresence>
+  );
 };
 
 export default QueueList;
